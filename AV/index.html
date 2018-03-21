@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="https://d3js.org/d3.v5.js"></script>
+  </head>
+  <body>
+
+    <h1>JS Project</h1>
+    <canvas width="500" height="500" id="canvas"></canvas> <canvas width="500" height="500" id="canvas"></canvas>
+    <script>
+
+      var data = [ 16, 68, 20, 30, 54 ];
+      var canvas = document.getElementById('canvas')
+      var c = canvas.getContext('2d');
+
+      c.fillStyle = "purple";
+      c.fillRect(0,0,500,500);
+
+              //draw axis lines
+      c.fillStyle = "black";
+      c.lineWidth = 2.0;
+      c.beginPath();
+      c.moveTo(30,10);
+      c.lineTo(30,460);
+      c.lineTo(490,460);
+      c.stroke();
+
+      var labels = ["JAN","FEB","MAR","APR","MAY"];
+        //draw horiz text
+      for(var i=0; i<5; i++) {
+          c.fillText(labels[i], 50+ i*100, 475);
+      }
+
+      c.fillStyle = "blue";
+      for(var i=0; i<data.length; i++) {
+          var dp = data[i];
+          c.fillRect(40 + i*100, 460-dp*5 , 50, dp*5);
+      }
+
+    </script>
+  </body>
+</html>
