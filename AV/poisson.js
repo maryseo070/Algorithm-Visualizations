@@ -10,17 +10,39 @@ function setup() {
 
   createDots()
 
+  // function createDots() {
+  //   for (let i = 0; i < 10; i++) {
+  //     var generateDots = d3.timer( function () {
+  //       let x = Math.floor(Math.random() * 500);
+  //       let y = Math.floor(Math.random() * 500);
+  //       ctx.beginPath(); //Start path
+  //       ctx.arc(x, y, 1, 20, Math.PI * 2, true);
+  //       ctx.fill();
+  //     });
+  //   }
+  //   generateDots.stop();
+  // }
+
   function createDots() {
-
-    let m = 0;
-    while (m < 200) {
-      m++;
-      var generateDots = d3.timeout(makeDot, 20);
-      // makeDot()
-
-    }
-    // generateDots.stop();
+      let generateDots = d3.timer(() => { 
+        for (let i = 0; i < 10; i++) {
+          let x = Math.floor(Math.random() * 500);
+          let y = Math.floor(Math.random() * 500);
+          ctx.beginPath(); //Start path
+          ctx.arc(x, y, 1, 20, Math.PI * 2, true);
+          ctx.fill();
+        }
+      });
+      setTimeout(() => generateDots.stop(), 4000);
   }
+
+
+
+  // var t = d3.timer(function(elapsed) {
+  //   console.log(elapsed);
+  //   if (elapsed > 200) t.stop();
+  // }, 150);
+
 
   function makeDot(){
     let x = Math.floor(Math.random() * 500);
