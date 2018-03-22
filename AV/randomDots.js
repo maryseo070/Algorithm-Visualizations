@@ -13,7 +13,7 @@ function setup() {
 
   function randomDots() {
       let generateDots = d3.timer(() => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 5; i++) {
           let x = Math.floor(Math.random() * 500);
           let y = Math.floor(Math.random() * 500);
           ctx.beginPath(); //Start path
@@ -24,12 +24,4 @@ function setup() {
       setTimeout(() => generateDots.stop(), 4000);
   }
 
-
-  function makeDot(){
-    let x = Math.floor(Math.random() * 500);
-    let y = Math.floor(Math.random() * 500);
-    ctx.beginPath(); //Start path
-    ctx.arc(x, y, 1, 20, Math.PI * 2, true);
-    ctx.fill();
-  }
 }
