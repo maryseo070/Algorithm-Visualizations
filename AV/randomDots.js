@@ -8,7 +8,7 @@ function setup() {
   var canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 
 
-  randomDots()
+  // randomDots()
 
 
   function randomDots() {

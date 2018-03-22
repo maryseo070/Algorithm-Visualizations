@@ -1,6 +1,6 @@
-document.addEventListener("DOMContentLoaded", makeCircle);
+document.addEventListener("DOMContentLoaded", makeCircles);
 
-function makeCircle () {
+function makeCircles () {
   const bodySelection = d3.select("body");
   const svgSelection = bodySelection.append("svg")
     .attr("width", 400)
@@ -20,14 +20,15 @@ function makeCircle () {
         .style("fill", "purple");
 
   }
+  
 
     //if you change the dimensions of SVG then remember to change
     //row and column dimensions as well
 
-    let r  = 2; //min dstance between points
-    let k = 30; //limit to # of samples to choose before rejection
+    let r  = 7; //min dstance between points
+    let k = 3000; //limit to # of samples to choose before rejection
     let grid = [];
-    let w = r / Math.sqrt(2); //size of cells holding samples / n = 2
+    let w = r / Math.sqrt(2); //size of cells holding samples / n = 2 in the grid
     let active = [];
     let cols, rows;
     let ordered = [];
@@ -40,35 +41,91 @@ function makeCircle () {
         grid[i] = undefined;
       }
     }
+    setup()
 
 
-    let x = Math.floor(Math.random() * 400);
-    let y = Math.floor(Math.random() * 400);
+    let x = Math.floor(Math.random() * 400); //random point 
+    let y = Math.floor(Math.random() * 400); //random point
     let i = Math.floor(x / w); //column position of sample
     let j = Math.floor(y / w); //width position of sample
-    let pos = generateCircle(x, y);
-    grid[i + j * cols] = pos;
-    active.push(pos);
+    let randomPoint = {x: x, y: y}; //point coordinates
+    // debugger
 
-    if (active.length > 0) {
-      let randomIndex = Math.floor(Math.random() * active.length);
-      let position = active[randomIndex];
-      for (let m = 0; m < k; m++) {
-        let magnitude = Math.floor((Math.random() * r) * (Math.random() * 2 * r) );
+    grid[i + j * cols] = randomPoint; //inserting the point into the grid
+
+    active.push(randomPoint);
+    
+    
+    function draw() {
+      for (let total = 0; total < 25; total++) {
+        if (active.length > 0) {
+          
+          let found = false;
+          let randomIndex = Math.floor(Math.random() * active.length);
+          let position = active[randomIndex];
+          
+          for (let m = 0; m < k; m++) {
+            let magnitude = Math.floor(Math.random() * (r + 1)) + r;
+            let randomAngle = Math.random() * Math.PI * 2
+            let randomAngle2 = Math.random() * Math.PI * 2
+            let sampleX = Math.cos(randomAngle) * magnitude
+            let sampleY = Math.sin(randomAngle2) * magnitude
+            let sample = {x: sampleX, y: sampleY}
+            // debugger 
+            
+            
+            let colPosition = Math.floor(sample.x / w) // sample's position on the grid 
+            let rowPosition = Math.floor(sample.y / w)
+             
+            if (colPosition > -1 && rowPosition > -1 && 
+                colPosition < cols && rowPosition < rows && 
+                !grid[colPosition + rowPosition * cols]) {
+              let acceptableDistance = true;
+              for (let i = -1; i <= 1; i++) { //spot to left, spot to right
+                for (let j = -1; j<= 1; j++) { 
+                  let neighborIndex = (colPosition + i) + (rowPosition + j) * cols
+                  let neighbor = grid[neighborIndex]
+                  // debugger
+                  
+                  if (neighbor) {
+                    let a = neighbor.x - sample.x
+                    let b = neighbor.y - sample.y 
+                    
+                    let dist = Math.sqrt(a*a + b*b)//distance between sample and neighbor
+                    if (dist < r) {
+                      acceptableDistance = false;
+                    }
+                  }
+                }
+              }
+              if (acceptableDistance) {
+                found = true
+                grid[colPosition + rowPosition * cols] = sample;
+                active.push(sample);
+                ordered.push(sample);
+                break;
+              }
+            }
+              
+            
+            if (!found) {
+              active.splice(randomIndex, 1);
+            }
+          }
+        }
+        
+        
+      }
+      for (var z = 0; z < ordered.length; z++) {
+        if (ordered[z].x) {
+          console.log(ordered)
+          generateCircle(ordered[z].x, ordered[z].y)
+          d3.timer( () => {
+            // generateCircle(ordered[z].x, ordered[z].y)
+          });
+        }
       }
     }
+    
+    draw()
 }
-//
-// var line = d3.line()
-//     .x(function(d) { return x(d.date); })
-//     .y(function(d) { return y(d.close); });
-
-
-
-// const poissonCanvas = d3.select("svg")
-//
-// poissonCanvas.append("circle")
-//         .attr("cx", 5)
-//         .attr("cy", 5)
-//         .attr("r", 5)
-//         .attr("fill", 'purple');
