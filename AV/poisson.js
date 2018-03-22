@@ -58,8 +58,10 @@ function makeCircle () {
       }
     }
 }
-
-
+//
+// var line = d3.line()
+//     .x(function(d) { return x(d.date); })
+//     .y(function(d) { return y(d.close); });
 
 
 
