@@ -1,131 +1,80 @@
-document.addEventListener("DOMContentLoaded", makeCircles);
 
-function makeCircles () {
-  const bodySelection = d3.select("body");
-  const svgSelection = bodySelection.append("svg")
-    .attr("width", 400)
-    .attr("height", 400);
-  const circleSelection = svgSelection.append("circle")
-    .attr("cx", 50)
-    .attr("cy", 100)
-    .attr("r", 2)
-    .style("fill", "purple");
-
-
-  function generateCircle(x, y) {
-    svgSelection.append("circle")
-        .attr("cx", x)
-        .attr("cy", y)
-        .attr("r", 2)
-        .style("fill", "purple");
-
+var width = 960,
+    height = 500;
+var sample = poissonDiscSampler(width, height, 10);
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+d3.timer(function() {
+  for (var i = 0; i < 10; ++i) {
+    var s = sample();
+    if (!s) return true;
+    svg.append("circle")
+        .attr("cx", s[0])
+        .attr("cy", s[1])
+        .attr("r", 0)
+      .transition()
+        .attr("r", 2);
   }
-  
-
-    //if you change the dimensions of SVG then remember to change
-    //row and column dimensions as well
-
-    let r  = 7; //min dstance between points
-    let k = 3000; //limit to # of samples to choose before rejection
-    let grid = [];
-    let w = r / Math.sqrt(2); //size of cells holding samples / n = 2 in the grid
-    let active = [];
-    let cols, rows;
-    let ordered = [];
-
-    function setup() {
-      cols = Math.floor(400 / w);
-      rows = Math.floor(400 / w);
-
-      for (var i = 0; i < cols * rows; i++) {
-        grid[i] = undefined;
+});
+// Based on https://www.jasondavies.com/poisson-disc/
+function poissonDiscSampler(width, height, radius) {
+  var k = 30, // maximum number of samples before rejection
+      radius2 = radius * radius,
+      R = 3 * radius2,
+      cellSize = radius * Math.SQRT1_2,
+      gridWidth = Math.ceil(width / cellSize),
+      gridHeight = Math.ceil(height / cellSize),
+      grid = new Array(gridWidth * gridHeight),
+      queue = [],
+      queueSize = 0,
+      sampleSize = 0;
+  return function() {
+    if (!sampleSize) return sample(Math.random() * width, Math.random() * height);
+    // Pick a random existing sample and remove it from the queue.
+    while (queueSize) {
+      var i = Math.random() * queueSize | 0,
+          s = queue[i];
+      // Make a new candidate between [radius, 2 * radius] from the existing sample.
+      for (var j = 0; j < k; ++j) {
+        var a = 2 * Math.PI * Math.random(),
+            r = Math.sqrt(Math.random() * R + radius2),
+            x = s[0] + r * Math.cos(a),
+            y = s[1] + r * Math.sin(a);
+        // Reject candidates that are outside the allowed extent,
+        // or closer than 2 * radius to any existing sample.
+        if (0 <= x && x < width && 0 <= y && y < height && far(x, y)) return sample(x, y);
       }
+      queue[i] = queue[--queueSize];
+      queue.length = queueSize;
     }
-    setup()
-
-
-    let x = Math.floor(Math.random() * 400); //random point 
-    let y = Math.floor(Math.random() * 400); //random point
-    let i = Math.floor(x / w); //column position of sample
-    let j = Math.floor(y / w); //width position of sample
-    let randomPoint = {x: x, y: y}; //point coordinates
-    // debugger
-
-    grid[i + j * cols] = randomPoint; //inserting the point into the grid
-
-    active.push(randomPoint);
-    
-    
-    function draw() {
-      for (let total = 0; total < 25; total++) {
-        if (active.length > 0) {
-          
-          let found = false;
-          let randomIndex = Math.floor(Math.random() * active.length);
-          let position = active[randomIndex];
-          
-          for (let m = 0; m < k; m++) {
-            let magnitude = Math.floor(Math.random() * (r + 1)) + r;
-            let randomAngle = Math.random() * Math.PI * 2
-            let randomAngle2 = Math.random() * Math.PI * 2
-            let sampleX = Math.cos(randomAngle) * magnitude
-            let sampleY = Math.sin(randomAngle2) * magnitude
-            let sample = {x: sampleX, y: sampleY}
-            // debugger 
-            
-            
-            let colPosition = Math.floor(sample.x / w) // sample's position on the grid 
-            let rowPosition = Math.floor(sample.y / w)
-             
-            if (colPosition > -1 && rowPosition > -1 && 
-                colPosition < cols && rowPosition < rows && 
-                !grid[colPosition + rowPosition * cols]) {
-              let acceptableDistance = true;
-              for (let i = -1; i <= 1; i++) { //spot to left, spot to right
-                for (let j = -1; j<= 1; j++) { 
-                  let neighborIndex = (colPosition + i) + (rowPosition + j) * cols
-                  let neighbor = grid[neighborIndex]
-                  // debugger
-                  
-                  if (neighbor) {
-                    let a = neighbor.x - sample.x
-                    let b = neighbor.y - sample.y 
-                    
-                    let dist = Math.sqrt(a*a + b*b)//distance between sample and neighbor
-                    if (dist < r) {
-                      acceptableDistance = false;
-                    }
-                  }
-                }
-              }
-              if (acceptableDistance) {
-                found = true
-                grid[colPosition + rowPosition * cols] = sample;
-                active.push(sample);
-                ordered.push(sample);
-                break;
-              }
-            }
-              
-            
-            if (!found) {
-              active.splice(randomIndex, 1);
-            }
-          }
-        }
-        
-        
-      }
-      for (var z = 0; z < ordered.length; z++) {
-        if (ordered[z].x) {
-          console.log(ordered)
-          generateCircle(ordered[z].x, ordered[z].y)
-          d3.timer( () => {
-            // generateCircle(ordered[z].x, ordered[z].y)
-          });
+  };
+  function far(x, y) {
+    var i = x / cellSize | 0,
+        j = y / cellSize | 0,
+        i0 = Math.max(i - 2, 0),
+        j0 = Math.max(j - 2, 0),
+        i1 = Math.min(i + 3, gridWidth),
+        j1 = Math.min(j + 3, gridHeight);
+    for (j = j0; j < j1; ++j) {
+      var o = j * gridWidth;
+      for (i = i0; i < i1; ++i) {
+        if (s = grid[o + i]) {
+          var s,
+              dx = s[0] - x,
+              dy = s[1] - y;
+          if (dx * dx + dy * dy < radius2) return false;
         }
       }
     }
-    
-    draw()
+    return true;
+  }
+  function sample(x, y) {
+    var s = [x, y];
+    queue.push(s);
+    grid[gridWidth * (y / cellSize | 0) + (x / cellSize | 0)] = s;
+    ++sampleSize;
+    ++queueSize;
+    return s;
+  }
 }
