@@ -1,5 +1,5 @@
 // import * as d3 from 'd3';
-document.addEventListener("DOMContentLoaded", setup);
+// document.addEventListener("DOMContentLoaded", setup);
 
 function setup() {
   var canvas = document.getElementById('myCanvas');

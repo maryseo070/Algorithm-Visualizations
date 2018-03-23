@@ -1,7 +1,7 @@
+// import * as d3 from 'd3';
 document.addEventListener("DOMContentLoaded", shuffle);
-
 function shuffle() {
-  const bodySelection = d3.select("body")
+  const bodySelection = d3.select("body");
   const svgSelection = bodySelection.append("svg")
   .attr("width", 400)
   .attr("height", 400);
@@ -13,7 +13,6 @@ function shuffle() {
   d3.timer( () => {
     for (let i = 0; i < 10; i ++) {
       var s = samp();
-      // debugger
       if (!s) return true;
       const line = svgSelection.append("line")
       .style("stroke", "green")
@@ -47,34 +46,34 @@ function shuffle() {
     var queue = [],
     queueSize = 0,
     sampleSize = 0;
-    let arr = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
-    debugger
+    // let arr = [5, 10, 15, 20, 25, 30]
+        let arr = [97,5,34,74,23,18]
     return function() {
-      while (sampleSize <= 0) {
+      if (sampleSize <= 0) {
         return sample(Math.random() * 20, Math.random() * 20);
       }
-      // debugger
-      if (queueSize > 0) {
-        debugger
+
+      while (queueSize > 0) {
         var i = Math.random() * queueSize | 0,
             s = queue[i];
             for (var j = 0; j < arr.length; j++) {
-              var x1 = arr[j],
-                  x2 = arr[j + 1]
-            if (x1 >= 0 && x2 >= 0 && x1 < 400 && x2 < 400) return sample(x1, x2);
-            debugger
+              var randomIndex = Math.random() * arr.length | 0
+              var randomIndex2 = Math.random() * arr.length | 0
+              var randomPair = arr[randomIndex]
+              var randomPair2 = arr[randomIndex2]
+              var x1 = randomPair,
+                  x2 = randomPair2
+              if (x1 >= 0 && x2 >= 0 && x1 < 400 && x2 < 400) {
+                return sample(x1, x2);
+              }
           }
-          // debugger
             queue[i] = queue[--queueSize];
             queue.length = queueSize;
-            // drawLines();
       }
     };
 
     function sample(x1, x2) {
-      // debugger
       var s = [x1, x2]
-      // debugger
       queue.push(s);
       ++queueSize;
       ++sampleSize;
@@ -82,23 +81,23 @@ function shuffle() {
     }
   }
 
-  //
-  // function shuffle(array) {
-  //   var m = array.length, t, i;
-  //
-  //   // While there remain elements to shuffle…
-  //   while (m) {
-  //
-  //     // Pick a remaining element…
-  //     i = Math.floor(Math.random() * m--);
-  //
-  //     // And swap it with the current element.
-  //     t = array[m];
-  //     array[m] = array[i];
-  //     array[i] = t;
-  //   }
-  //
-  //   return array;
-  // }
+
+  function shuffle(array) {
+    var m = array.length, t, i;
+
+    // While there remain elements to shuffle…
+    while (m) {
+
+      // Pick a remaining element…
+      i = Math.floor(Math.random() * m--);
+
+      // And swap it with the current element.
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+
+    return array;
+  }
 
 }
