@@ -79,18 +79,18 @@ function poissonDiscSampler(width, height, radius) {
   }
 }
 
-  let line ==  ("20", 0), ("25", 30)
-                      x1          x2
-  let x1 = 50
-  let x2 = 50
-  let decrementer = 1
-
-  var arr =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-  let coords = [];
-  var median = 8
-  var lower_half = arr[0..7]
-
-  for (let i = 0; i < lower_half.length; i++) {
-    coords.push([x1 - (decrementer * 1.2), x2 - decrementer])
-    decrementer ++
-  }
+  // let line ==  ("20", 0), ("25", 30)
+  //                     x1          x2
+  // let x1 = 50
+  // let x2 = 50
+  // let decrementer = 1
+  //
+  // var arr =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+  // let coords = [];
+  // var median = 8
+  // var lower_half = arr[0..7]
+  //
+  // for (let i = 0; i < lower_half.length; i++) {
+  //   coords.push([x1 - (decrementer * 1.2), x2 - decrementer])
+  //   decrementer ++
+  // }
