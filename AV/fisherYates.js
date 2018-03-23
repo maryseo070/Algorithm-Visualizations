@@ -1,5 +1,6 @@
-// import * as d3 from 'd3';
+// import * as d3 from "d3";
 document.addEventListener("DOMContentLoaded", shuffle);
+
 function shuffle() {
   const bodySelection = d3.select("body");
   const svgSelection = bodySelection.append("svg")
@@ -20,9 +21,9 @@ function shuffle() {
       .attr("y1", 0)      // y position of the first end of the line
       .attr("x2", s[1])     // x position of the second end of the line
       .attr("y2", 30)    // y position of the second end of the line
-      .transition()
+      .transition();
     }
-  })
+  });
 
 
   // function drawLines() {
@@ -42,12 +43,29 @@ function shuffle() {
   //
    // drawLines()
 
+  function positionLines() {
+    let x1 = 50
+    let x2 = 50
+    let decrementer = 1
+    var arr =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    let coords = [];
+    var median = 8
+
+    for (let i = 0; i < arr.length / 2; i++) {
+      coords.push([x1 - (decrementer * 1.2), x2 - decrementer])
+      decrementer ++
+    }
+    return coords;
+  }
+
   function shuffleSample() {
     var queue = [],
     queueSize = 0,
     sampleSize = 0;
     // let arr = [5, 10, 15, 20, 25, 30]
-        let arr = [97,5,34,74,23,18]
+        // let arr = [[0,0],[5,5],[10,10],[15,15],[20,20],[25,25],[30,30],[35,35],[40, 40]];
+        var arr =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
     return function() {
       if (sampleSize <= 0) {
         return sample(Math.random() * 20, Math.random() * 20);
@@ -56,13 +74,12 @@ function shuffle() {
       while (queueSize > 0) {
         var i = Math.random() * queueSize | 0,
             s = queue[i];
-            for (var j = 0; j < arr.length; j++) {
-              var randomIndex = Math.random() * arr.length | 0
-              var randomIndex2 = Math.random() * arr.length | 0
-              var randomPair = arr[randomIndex]
-              var randomPair2 = arr[randomIndex2]
-              var x1 = randomPair,
-                  x2 = randomPair2
+            for (var j = 0; j < 2; j++) {
+              var randomIndex = Math.random() * arr.length | 0;
+              var randomIndex2 = Math.random() * arr.length | 0;
+              var randomPair = arr[randomIndex];
+              var x1 = randomPair[0],
+                  x2 = randomPair[1];
               if (x1 >= 0 && x2 >= 0 && x1 < 400 && x2 < 400) {
                 return sample(x1, x2);
               }
@@ -73,7 +90,7 @@ function shuffle() {
     };
 
     function sample(x1, x2) {
-      var s = [x1, x2]
+      var s = [x1, x2];
       queue.push(s);
       ++queueSize;
       ++sampleSize;
@@ -82,7 +99,7 @@ function shuffle() {
   }
 
 
-  function shuffle(array) {
+  function shuffle2(array) {
     var m = array.length, t, i;
 
     // While there remain elements to shuffle…
