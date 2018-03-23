@@ -59,7 +59,7 @@ function makeCircles () {
     
     
     function draw() {
-  
+      //TODO add while loop with cells of grid --until they all contain samples
       for (let total = 0; total < 11000; total++) {
         console.log(ordered.length);
         if (active.length > 0) {

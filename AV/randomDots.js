@@ -1,4 +1,5 @@
-// document.addEventListener("DOMContentLoaded", setup);
+// import * as d3 from 'd3';
+document.addEventListener("DOMContentLoaded", setup);
 
 function setup() {
   var canvas = document.getElementById('myCanvas');
@@ -8,7 +9,6 @@ function setup() {
   var canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 
 
-  randomDots()
 
   function randomDots() {
       let generateDots = d3.timer(() => {
@@ -23,5 +23,6 @@ function setup() {
       setTimeout(() => generateDots.stop(), 4000);
   }
 
-  
+  randomDots();
+
 }
