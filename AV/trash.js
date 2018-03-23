@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", makeCircles);
+// document.addEventListener("DOMContentLoaded", makeCircles);
 
 function makeCircles () {
   const bodySelection = d3.select("body");
@@ -6,7 +6,7 @@ function makeCircles () {
     .attr("width", 400)
     .attr("height", 400);
 
-    // dots()
+
 
   function generateCircle(x, y) {
     // debugger
@@ -118,10 +118,17 @@ function makeCircles () {
             // }
           }
         }
-        // console.log(ordered)
+        
         
       }
-      // dots()
+      function dots () {
+        let generateDots = d3.timer( () => {
+          for (let z = 0; z < ordered.length; z++) {
+            generateCircle(ordered[z].x, ordered[z].y);
+          }
+        })
+      }
+      dots()
       // 
       // for (var z = 0; z < ordered.length; z++) {
       //   if (ordered[z].x) {
@@ -131,21 +138,7 @@ function makeCircles () {
       // 
       //   }
       // }
-      return ordered
-      // debugger
     }
     
-    let ord = draw();
-    
-    function dots (ord) {
-      // debugger
-      let generateDots = d3.timer( () => {
-        for (let z = 0; z < 100; z++) {
-          let x = ord[z].x
-          let y = ord[z].y
-          generateCircle(x, y);
-        }
-      })
-    }
-  dots(ord)
+    draw()
 }
