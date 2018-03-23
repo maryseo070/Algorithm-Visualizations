@@ -6,28 +6,70 @@ function shuffle() {
   .attr("width", 400)
   .attr("height", 400);
   
-  function makeLine (x, y) {
-    let generateLine = d3.timer( () => {
-      for (let i = 0; i < 10; i ++) {
-        const line = svgSelection.append("line")  
-        .style("stroke", "green") 
-        .attr("x1", 0)     // x position of the first end of the line
-        .attr("y1", 0)      // y position of the first end of the line
-        .attr("x2", 20)     // x position of the second end of the line
-        .attr("y2", 20);    // y position of the second end of the line
+  
+  var invoke = shuffleSample(); 
+  
+  d3.timer( () => {
+    for (let i = 0; i < 10; i ++) {
+      let s = sample();
+      // debugger
+      if (!s) return true;
+      const line = svgSelection.append("line")  
+      .style("stroke", "green") 
+      .attr("x1", s[0])     // x position of the first end of the line
+      .attr("y1", 0)      // y position of the first end of the line
+      .attr("x2", s[1])     // x position of the second end of the line
+      .attr("y2", 30);    // y position of the second end of the line
+    }
+  })
+  
+  
+  
+  
+  // let queue = []
+  var width = 400;
+  var height = 400;
+  var queue = [],
+  queueSize = 0,
+  sampleSize = 0;
+  
+  
+  function shuffleSample() {
+    debugger
+    var queue = [],
+        queueSize = 0,
+        sampleSize = 0;
+    return function() {
+      // debugger
+      if (sampleSize < 1) return sample(Math.random() * 20, Math.random() * 20);
+      // debugger
+      let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+      while (queueSize) {
+        // debugger
+        var i = Math.random() * queueSize | 0,
+            s = queue[i]; 
+            for (var j = 0; j < arr.length; j++) {
+              var x1 = arr[j],
+                  x2 = arr[j + 1]
+               return sample(x1, x2)
+            }
+            queue[i] = queue[--queueSize];
+            queue.length = queueSize;
       }
-    })
-  }
-  
-  let queue = []
-  
-  function sample(x, y) {
-    var q = [x, y]
-    queue.push(q);
+    }
     
+    function sample(x1, x2) {
+      var s = [x1, x2]
+      queue.push(s);
+      ++queueSize;
+      ++sampleSize;
+      return s;
+    }
   }
   
-  let arr = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+  
+  
+  
   function shuffle(array) {
     var m = array.length, t, i;
     
