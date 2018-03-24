@@ -1,127 +1,159 @@
-// import * as d3 from "d3";
-document.addEventListener("DOMContentLoaded", shuffle);
-
-function shuffle() {
-  const bodySelection = d3.select("body");
-  const svgSelection = bodySelection.append("svg")
-  .attr("width", 400)
-  .attr("height", 400);
+import * as d3 from "d3";
+import {scaleLinear} from "d3-scale";
 
 
-  var samp = shuffleSample();
+const bodySelection = d3.select("body");
+const svgSelection = bodySelection.append("svg")
+.attr("width", 800)
+.attr("height", 50);
 
-  //
-  d3.timer( () => {
-    for (let i = 0; i < 10; i ++) {
-      var s = samp();
-      if (!s) return true;
-      const line = svgSelection.append("line")
-      .style("stroke", "pink")
-      .attr("x1", s[0])     // x position of the first end of the line
-      .attr("y1", 0)      // y position of the first end of the line
-      .attr("x2", s[1])     // x position of the second end of the line
-      .attr("y2", 30)    // y position of the second end of the line
-      .transition();
+
+//NOT NECESSARY
+// let l = svgSelection.append("line")
+// .style("stroke", "pink")
+// .attr("x1", 0)
+// .attr("y1", 30)
+// .attr("x2", 20)
+// .attr("y2", 30);
+
+
+export const generateLines = () => {
+
+  let w = 800,
+      h = 50;
+
+  let n = 300,
+      x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
+      a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
+      data = d3.shuffle(d3.range(n)),
+      duration = 250;
+
+  let l = svgSelection.selectAll("line")
+    .data(data)
+    .enter().append("line")
+    .style("stroke", "pink")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 0)
+      .attr("y2", h)
+      .attr("transform", transform);
+
+  start();
+
+  // Start the animation!
+  function start() {
+    debugger
+    let passes = mergesort(data).reverse();
+
+    update();
+
+    function update() {
+      debugger
+      let pass = passes.pop();
+
+      l.data(pass, Number)
+          .transition()
+          .duration(duration)
+          .attr("transform", transform);
+
+      if (passes.length) {
+        setTimeout(update, duration);
+      } else {
+        d3.shuffle(data);
+        setTimeout(start, duration + 4000);
+      }
     }
-  });
+  }
 
+  function transform(d, i) {
+    return "translate(" + x(i) + "," + h + ")rotate(" + a(d) + ")";
+  }
 
-  // function drawLines() {
-  //   for (let i = 0; i < 10; i ++) {
-  //     let s = sample();
-  //     // debugger
-  //     if (!s) return true;
-  //     const line = svgSelection.append("line")
-  //     .style("stroke", "green")
-  //     .attr("x1", s[0])     // x position of the first end of the line
-  //     .attr("y1", 0)      // y position of the first end of the line
-  //     .attr("x2", s[1])     // x position of the second end of the line
-  //     .attr("y2", 30)    // y position of the second end of the line
-  //     .transition()
-  //   }
+  // let trans = d3.transform()
+  //   .translate(function(d, i) { return [x(i), h]})
+  //   .rotate(a(d));
+
+  // Sorts the specified array using bottom-up mergesort, returning an array of
+  // arrays representing the state of the specified array after each insertion for
+  // each parallel pass. The first pass is performed at size = 2.
+  function mergesort(array) {
+    let sorted = [],
+        i,
+        j,
+        n = array.length,
+        m = 1;
+
+    // double the size each pass
+    while (m < array.length) {
+      i = j = 0; while (i < array.length) j += merge(i, i += m, i += m);
+      if (j) sorted.push(array.slice());
+      else m <<= 1;
+    }
+
+    // Merges two adjacent sorted arrays in-place.
+    function merge(start, middle, end) {
+      middle = Math.min(array.length, middle);
+      end = Math.min(array.length, end);
+      for (; start < middle; start++) {
+        if (array[start] > array[middle]) {
+          let v = array[start];
+          array[start] = array[middle];
+          insert(middle, end, v);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Inserts the value v into the subarray specified by start and end.
+    function insert(start, end, v) {
+      while (start + 1 < end && array[start + 1] < v) {
+        let tmp = array[start];
+        array[start] = array[start + 1];
+        array[start + 1] = tmp;
+        start++;
+      }
+      array[start] = v;
+    }
+
+    return sorted;
+  }
+  // function mergesort(array, callback) {
+  //   if (array.length <= 1) return array;
+  //
+  //   if (!callback) callback = (left,  right) => {
+  //     return left < right ? -1 : left > right ? 1 : 0;
+  //   };
+  //
+  //   const mid = Math.floor(array.length / 2);
+  //   const sortedLeft = mergesort(array.slice(0, mid), callback);
+  //   const sortedRight = mergesort(array.slice(mid), callback);
+  //
+  //   return merge(sortedLeft, sortedRight, callback);
   // }
   //
-   // drawLines()
+  // function merge(left, right, callback) {
+  //   let merged = [];
+  //
+  //   while (left.length && right.length) {
+  //     switch(callback(left[0], right[0])) {
+  //       case -1:
+  //         merged.push(left.shift());
+  //         break;
+  //       case 0:
+  //         merged.push(left.shift());
+  //         break;
+  //       case 1:
+  //         merged.push(right.shift());
+  //         break;
+  //     }
+  //   }
+  //
+  //   merged = merged.concat(left);
+  //   merged = merged.concat(right);
+  //
+  //   return merged;
+  // }
 
-  function positionLines() {
-    let x1 = 50
-    let x2 = 50
-    let decrementer = 1
-    let incrementer = 1
-    // var arr =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1,1,1,1,1,1,1,1,1,1,1,1,]
-    let coords = [];
-    var median = 8
-
-    for (let i = 0; i <= 20; i++) {
-      debugger
-      coords.push([x1 - (decrementer * 3), x2 - (decrementer * 2)])
-      decrementer = decrementer - 6
-    }
-    for (let j = 21; j < 50; j++) {
-      debugger
-      coords.push([x1 + (decrementer * 2), x2 + (decrementer * 3)]);
-      incrementer += 6;
-    }
-    return coords;
-  }
-
-  function shuffleSample() {
-    var queue = [],
-    queueSize = 0,
-    sampleSize = 0;
-    // let arr = [5, 10, 15, 20, 25, 30]
-        // let arr = [[0,0],[5,5],[10,10],[15,15],[20,20],[25,25],[30,30],[35,35],[40, 40]];
-        // var arr =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        let array = positionLines();
-        console.log(array)
-    return function() {
-      if (sampleSize <= 0) {
-        return sample(Math.random() * 20, Math.random() * 20);
-      }
-
-      while (queueSize > 0) {
-        var i = Math.random() * queueSize | 0,
-            s = queue[i];
-            for (var j = 0; j < 2; j++) {
-              var randomIndex = Math.random() * array.length | 0;
-              var randomPair = array[randomIndex];
-              var x1 = randomPair[0],
-                  x2 = randomPair[1];
-              // if (x1 >= 0 && x2 >= 0 && x1 < 400 && x2 < 400) {
-                return sample(x1, x2);
-              // }
-          }
-            queue[i] = queue[--queueSize];
-            queue.length = queueSize;
-      }
-    };
-
-    function sample(x1, x2) {
-      var s = [x1, x2];
-      queue.push(s);
-      ++queueSize;
-      ++sampleSize;
-      return s;
-    }
-  }
-
-
-  function shuffle2(array) {
-    var m = array.length, t, i;
-
-    // While there remain elements to shuffle…
-    while (m) {
-
-      // Pick a remaining element…
-      i = Math.floor(Math.random() * m--);
-
-      // And swap it with the current element.
-      t = array[m];
-      array[m] = array[i];
-      array[i] = t;
-    }
-
-    return array;
-  }
-
-}
+};
+generateLines();

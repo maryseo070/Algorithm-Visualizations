@@ -1,10 +1,11 @@
-// document.addEventListener("DOMContentLoaded", makeCircles);
+import * as d3 from 'd3';
 
-function makeCircles () {
-  const bodySelection = d3.select("body");
-  const svgSelection = bodySelection.append("svg")
-    .attr("width", 400)
-    .attr("height", 400);
+const bodySelection = d3.select("body");
+const svgSelection = bodySelection.append("svg")
+.attr("width", 300)
+.attr("height", 300);
+
+export const makeCircles = () => {
 
 
 
@@ -15,14 +16,14 @@ function makeCircles () {
         svgSelection.append("circle")
         .attr("cx", x)
         .attr("cy", y)
-        .attr("r", 2)
+        .attr("r", 4)
         .style("fill", "purple");
-        
+
       }
     // })
 
   }
-  
+
 
     //if you change the dimensions of SVG then remember to change
     //row and column dimensions as well
@@ -46,7 +47,7 @@ function makeCircles () {
     setup()
 
 
-    let x = Math.floor(Math.random() * 400); //random point 
+    let x = Math.floor(Math.random() * 400); //random point
     let y = Math.floor(Math.random() * 400); //random point
     let i = Math.floor(x / w); //column position of sample
     let j = Math.floor(y / w); //width position of sample
@@ -56,18 +57,18 @@ function makeCircles () {
     grid[i + j * cols] = randomPoint; //inserting the point into the grid
 
     active.push(randomPoint);
-    
-    
+
+
     function draw() {
       //TODO add while loop with cells of grid --until they all contain samples
-      for (let total = 0; total < 11000; total++) {
-        console.log(ordered.length);
+      for (let total = 0; total < 8500; total++) {
+        // console.log(ordered.length);
         if (active.length > 0) {
-          
+
           let found = false;
           let randomIndex = Math.floor(Math.random() * active.length);
           let position = active[randomIndex];
-          
+
           for (let m = 0; m < k; m++) {
             let magnitude = Math.floor(Math.random() * (r + 1)) + r;
             let randomAngle = Math.random() * Math.PI * 2
@@ -75,27 +76,27 @@ function makeCircles () {
             let sampleX = Math.cos(randomAngle) * magnitude + position.x
             let sampleY = Math.sin(randomAngle2) * magnitude + position.y
             let sample = {x: sampleX, y: sampleY}
-            // console.log(sample) 
-            
-            
-            let colPosition = Math.floor(sample.x / w) // sample's position on the grid 
+            // console.log(sample)
+
+
+            let colPosition = Math.floor(sample.x / w) // sample's position on the grid
             let rowPosition = Math.floor(sample.y / w)
-             
-            if (colPosition > -1 && rowPosition > -1 && 
-                colPosition < cols && rowPosition < rows && 
+
+            if (colPosition > -1 && rowPosition > -1 &&
+                colPosition < cols && rowPosition < rows &&
                 !grid[colPosition + rowPosition * cols]) {
-                  
+
               let acceptableDistance = true;
-              
+
               for (let i = -1; i <= 1; i++) { //spot to left, spot to right
-                for (let j = -1; j<= 1; j++) { 
+                for (let j = -1; j<= 1; j++) {
                   let neighborIndex = (colPosition + i) + (rowPosition + j) * cols
                   let neighbor = grid[neighborIndex]
                   // debugger
                   if (neighbor) {
                     let a = neighbor.x - sample.x
-                    let b = neighbor.y - sample.y 
-                    
+                    let b = neighbor.y - sample.y
+
                     let dist = Math.sqrt(a*a + b*b)//distance between sample and neighbor
                     if (dist < r) {
                       acceptableDistance = false;
@@ -111,15 +112,15 @@ function makeCircles () {
                 break;
               }
             }
-              
-            
+
+
             // if (!found) {
             //   active.splice(randomIndex, 1);
             // }
           }
         }
-        
-        
+
+
       }
       function dots () {
         let generateDots = d3.timer( () => {
@@ -129,16 +130,17 @@ function makeCircles () {
         })
       }
       dots()
-      // 
+      //
       // for (var z = 0; z < ordered.length; z++) {
       //   if (ordered[z].x) {
       //     // console.log(ordered)
       //     // generateCircle(ordered[z].x, ordered[z].y)
-      // 
-      // 
+      //
+      //
       //   }
       // }
     }
-    
+
     draw()
 }
+makeCircles()

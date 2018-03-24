@@ -94,3 +94,142 @@ function poissonDiscSampler(width, height, radius) {
   //   coords.push([x1 - (decrementer * 1.2), x2 - decrementer])
   //   decrementer ++
   // }
+
+
+
+
+
+
+
+
+
+  var margin = {top: 230, right: 30, bottom: 230, left: 30},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var n = 240,
+    index = d3.range(n),
+    data = shuffle(index.slice());
+
+var x = d3.scale.ordinal().domain(index).rangePoints([0, width]),
+    a = d3.scale.linear().domain([0, n - 1]).range([-Math.PI / 4, Math.PI / 4]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + (margin.top + height) + ")");
+
+var line = svg.selectAll("line")
+    .data(data)
+  .enter().append("line")
+    .attr("index", function(d, i) { return "i" + i; })
+    .attr("x2", function(d) { return height * Math.sin(a(d)); })
+    .attr("y2", function(d) { return -height * Math.cos(a(d)); })
+    .attr("transform", function(d, i) { return "translate(" + x(i) + ")"; });
+
+// Fisher–Yates shuffle
+function shuffle(array) {
+  var i = array.length, j, t;
+  while (--i > 0) {
+    j = ~~(Math.random() * (i + 1));
+    t = array[j];
+    array[j] = array[i];
+    array[i] = t;
+  }
+  return array;
+}
+
+// function quicksort(array) {
+//   var actions = [];
+//
+//   function partition(left, right, pivot) {
+//     var v = array[pivot];
+//     swap(pivot, --right);
+//     for (var i = left; i < right; ++i) if (array[i] <= v) swap(i, left++);
+//     swap(left, right);
+//     return left;
+//   }
+//
+//   function swap(i, j) {
+//     var t = array[i];
+//     array[i] = array[j];
+//     array[j] = t;
+//     actions.push({type: "swap", i: i, j: j});
+//   }
+//
+//   function recurse(left, right) {
+//     if (left < right) {
+//       var pivot = left + ~~(Math.random() * (right - left));
+//       actions.push({type: "partition", pivot: pivot});
+//       pivot = partition(left, right, pivot);
+//       recurse(left, pivot);
+//       recurse(pivot + 1, right);
+//     }
+//   }
+//
+//   recurse(0, array.length);
+//   return actions;
+// }
+
+var actions = quicksort(data).reverse();
+
+setInterval(function step() {
+  var action = actions.pop();
+  if (action) switch (action.type) {
+    case "partition": {
+      line.style("stroke", function(d, i) { return i == action.pivot ? "red" : null; });
+      step();
+      break;
+    }
+    case "swap": {
+      var t = line[0][action.i];
+      line[0][action.i] = line[0][action.j];
+      line[0][action.j] = t;
+      line.attr("transform", function(d, i) { return "translate(" + x(i) + ")"; });
+      break;
+    }
+  }
+}, 20);
+
+
+
+
+
+
+Array.prototype.mergeSort = function (callback) {
+  if (this.length <= 1) return this;
+
+  if (!callback) callback = (left,  right) => {
+    return left < right ? -1 : left > right ? 1 : 0;
+  }
+
+  const mid = Math.floor(this.length / 2);
+  const sortedLeft = this.slice(0, mid).mergeSort(callback);
+  const sortedRight = this.slice(mid).mergeSort(callback);
+
+  return sortedLeft.merge(sortedRight, callback);
+}
+
+Array.prototype.merge = function (arr, callback) {
+  let merged = [];
+
+  while (this.length && arr.length) {
+    switch(callback(this[0], arr[0])) {
+      case -1:
+        merged.push(this.shift());
+        break
+      case 0:
+        merged.push(this.shift());
+        break
+      case 1:
+        merged.push(arr.shift());
+        break
+    }
+  }
+
+  merged = merged.concat(this);
+  merged = merged.concat(arr);
+
+  return merged;
+}

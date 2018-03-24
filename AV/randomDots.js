@@ -1,4 +1,4 @@
-// import * as d3 from 'd3';
+import * as d3 from 'd3';
 // document.addEventListener("DOMContentLoaded", setup);
 
 function setup() {
@@ -16,13 +16,15 @@ function setup() {
           let x = Math.floor(Math.random() * 500);
           let y = Math.floor(Math.random() * 500);
           ctx.beginPath(); //Start path
-          ctx.arc(x, y, 1, 20, Math.PI * 2, true);
+          ctx.arc(x, y, 6, 20, Math.PI * 2, true);
           ctx.fill();
+          // ctx.fillStyle = '#fff';
         }
       });
-      setTimeout(() => generateDots.stop(), 4000);
+      setTimeout(() => generateDots.stop(), 3000);
   }
 
   randomDots();
 
 }
+setup();
