@@ -23540,7 +23540,7 @@ function setup() {
         var x = Math.floor(Math.random() * 500);
         var y = Math.floor(Math.random() * 500);
         ctx.beginPath(); //Start path
-        ctx.arc(x, y, 6, 20, Math.PI * 2, true);
+        ctx.arc(x, y, 2, 20, Math.PI * 2, true);
         ctx.fill();
         // ctx.fillStyle = '#fff';
       }
@@ -24241,10 +24241,10 @@ var mc = exports.mc = function mc() {
 
       var s = start();
       if (!s) return true;
-      svgSelection.append("circle").attr("cx", s[0]).attr("cy", s[1]).attr("r", 4)
+      svgSelection.append("circle").attr("cx", s[0]).attr("cy", s[1]).attr("r", 1)
       // .transition()
       // .attr("r", 2)
-      .style("fill", "purple");
+      .style("fill", "black");
       // .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
     }
     // setTimeout(() => generateDots.stop(), 3000);
@@ -24254,7 +24254,7 @@ var mc = exports.mc = function mc() {
 
 
   function draw() {
-    var r = 20; //min dstance between points
+    var r = 10; //min dstance between points
     var k = 30; //limit to # of samples to choose before rejection
     var radius2 = r * r;
     var R = 3 * radius2;
@@ -24519,7 +24519,7 @@ var shuffle = exports.shuffle = function shuffle() {
 
   // Start the animation!
   function start() {
-    debugger;
+    // debugger
     var passes = shuff(data).reverse();
 
     update();
@@ -24551,12 +24551,12 @@ var shuffle = exports.shuffle = function shuffle() {
     while (arrLength) {
 
       // Pick a remaining element…
-      i = Math.floor(Math.random() * m--);
+      i = Math.floor(Math.random() * arrLength--);
 
       // And swap it with the current element.
       target = array[arrLength];
       array[arrLength] = array[i];
-      array[i] = t;
+      array[i] = target;
     }
 
     // Inserts the value v into the subarray specified by start and end.

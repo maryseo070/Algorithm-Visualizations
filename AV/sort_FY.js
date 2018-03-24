@@ -29,7 +29,7 @@ export const shuffle = () => {
 
   // Start the animation!
   function start() {
-    debugger
+    // debugger
     let passes = shuff(data).reverse();
 
     update();
@@ -62,12 +62,12 @@ export const shuffle = () => {
     while (arrLength) {
 
       // Pick a remaining element…
-      i = Math.floor(Math.random() * m--);
+      i = Math.floor(Math.random() * arrLength--);
 
       // And swap it with the current element.
       target = array[arrLength];
       array[arrLength] = array[i];
-      array[i] = t;
+      array[i] = target;
     }
 
 

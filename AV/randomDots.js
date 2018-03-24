@@ -16,7 +16,7 @@ function setup() {
           let x = Math.floor(Math.random() * 500);
           let y = Math.floor(Math.random() * 500);
           ctx.beginPath(); //Start path
-          ctx.arc(x, y, 6, 20, Math.PI * 2, true);
+          ctx.arc(x, y, 2, 20, Math.PI * 2, true);
           ctx.fill();
           // ctx.fillStyle = '#fff';
         }

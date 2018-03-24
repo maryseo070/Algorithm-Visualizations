@@ -19,10 +19,10 @@ export const mc = () => {
       svgSelection.append("circle")
       .attr("cx", s[0])
       .attr("cy", s[1])
-      .attr("r", 4)
+      .attr("r", 1)
       // .transition()
       // .attr("r", 2)
-      .style("fill", "purple")
+      .style("fill", "black")
       // .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
     }
     // setTimeout(() => generateDots.stop(), 3000);
@@ -34,7 +34,7 @@ export const mc = () => {
 
 
     function draw() {
-      let r  = 20; //min dstance between points
+      let r  = 10; //min dstance between points
       let k = 30; //limit to # of samples to choose before rejection
       let radius2 = r * r;
       let R = 3 * radius2;
