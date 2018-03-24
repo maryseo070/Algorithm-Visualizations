@@ -10411,9 +10411,11 @@ var d3 = _interopRequireWildcard(_d);
 
 var _randomDots = __webpack_require__(473);
 
-var _mergeSort = __webpack_require__(488);
-
 var _poissonD = __webpack_require__(490);
+
+var _sort_FY = __webpack_require__(492);
+
+var _sort_MergeSort = __webpack_require__(491);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -24208,126 +24210,7 @@ function sequential(interpolator) {
 /***/ }),
 /* 486 */,
 /* 487 */,
-/* 488 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.mergesort = undefined;
-
-var _d = __webpack_require__(55);
-
-var d3 = _interopRequireWildcard(_d);
-
-var _d3Scale = __webpack_require__(475);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", 200).attr("height", 200);
-
-var mergesort = exports.mergesort = function mergesort(array) {
-  var sorted = [],
-      i = void 0,
-      j = void 0,
-      n = array.length,
-      increment = 1;
-
-  // double the size each pass
-  while (increment < array.length) {
-    debugger;
-    i = j = 0;while (i < array.length) {
-      j += merge(i, i += increment, i += increment);
-    }if (j) sorted.push(array.slice());else increment <<= 1;
-    debugger;
-  }
-
-  // Merges two adjacent sorted arrays in-place.
-  function merge(start, middle, end) {
-    middle = Math.min(array.length, middle);
-    end = Math.min(array.length, end);
-    for (; start < middle; start++) {
-      if (array[start] > array[middle]) {
-        var starter = array[start];
-        array[start] = array[middle];
-        stepper(middle, end, starter);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // Inserts the value v into the subarray specified by start and end.
-  function stepper(start, end, v) {
-    while (start + 1 < end && array[start + 1] < v) {
-      var tmp = array[start];
-      array[start] = array[start + 1];
-      array[start + 1] = tmp;
-      start++;
-    }
-    array[start] = v;
-  }
-
-  return sorted;
-};
-// console.log(mergesort([1,3,56,2,4,8]));
-//
-//
-// Array.prototype.mergeSort = function (func) {
-//   if (this.length <= 1) return this;
-//
-//   if (!func) func = (left,  right) => {
-//     return left < right ? -1 : left > right ? 1 : 0;
-//   }
-//
-//   const midpoint = Math.floor(this.length / 2);
-//   const sortedLeft = this.slice(0, midpoint).mergeSort(func);
-//   const sortedRight = this.slice(midpoint).mergeSort(func);
-//   debugger
-//   return sortedLeft.merge(sortedRight, func);
-//
-//   function merge (arr, func) {
-//     let merged = [];
-//
-//     while (this.length && arr.length) {
-//       switch(func(this[0], arr[0])) {
-//         case -1:
-//         merged.push(this.shift());
-//         break
-//         case 0:
-//         merged.push(this.shift());
-//         break
-//         case 1:
-//         merged.push(arr.shift());
-//         break
-//       }
-//     }
-//
-//     function insert(start, end, v) {
-//       while (start + 1 < end && this[start + 1] < v) {
-//         let tmp = this[start];
-//         this[start] = this[start + 1];
-//         this[start + 1] = tmp;
-//         start++;
-//       }
-//       this[start] = v;
-//     }
-// }
-//
-//
-//
-//   merged = merged.concat(this);
-//   merged = merged.concat(arr);
-//
-//   return merged;
-// }
-// console.log(([1,3,56,2,4,8]).mergeSort())
-
-/***/ }),
+/* 488 */,
 /* 489 */,
 /* 490 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -24352,79 +24235,68 @@ var svgSelection = bodySelection.append("svg").attr("width", 300).attr("height",
 var mc = exports.mc = function mc() {
 
   var start = draw();
-  // debugger
-  var generateDots = d3.timer(function () {
-    for (var i = 0; i < 10; i++) {
-      // debugger
+
+  d3.timer(function () {
+    for (var i = 0; i < 5; i++) {
+
       var s = start();
       if (!s) return true;
-      svgSelection.append("circle").attr("cx", s[0]).attr("cy", s[1]).attr("r", 4).transition()
+      svgSelection.append("circle").attr("cx", s[0]).attr("cy", s[1]).attr("r", 4)
+      // .transition()
       // .attr("r", 2)
       .style("fill", "purple");
       // .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
     }
-    setTimeout(function () {
-      return generateDots.stop();
-    }, 3000);
+    // setTimeout(() => generateDots.stop(), 3000);
   });
   //if you change the dimensions of SVG then remember to change
   //row and column dimensions as well
 
 
   function draw() {
-    var r = 10; //min dstance between points
+    var r = 20; //min dstance between points
     var k = 30; //limit to # of samples to choose before rejection
-    var grid = [];
     var radius2 = r * r;
     var R = 3 * radius2;
-    var w = r / Math.sqrt(2),
+    var w = r * Math.SQRT1_2,
         //size of cells holding samples / n = 2 in the grid
     active = [],
         queueSize = 0,
         sampleSize = 0;
     var cols = Math.floor(300 / w),
         rows = Math.floor(300 / w);
+    var grid = new Array(cols * rows);
 
-    // let x = Math.floor(Math.random() * 300); //random point
-    // let y = Math.floor(Math.random() * 300); //random point
-    // let i = Math.floor(x / w); //column position of sample
-    // let j = Math.floor(y / w); //width position of sample
-    // let randomPoint = {x: x, y: y}; //point coordinates
-    //
-    // grid[i + j * cols] = randomPoint; //inserting the point into the grid
-
-    // active.push(randomPoint);
-    // debugger
     return function () {
 
       if (!sampleSize) return queueUp(Math.random() * 300, Math.random() * 300);
-      // if (active.length > 0) {
 
       while (queueSize) {
-        // let idx = Math.random() * queueSize | 0,
 
-        var idx = Math.floor(Math.random() * active.length) | 0;
-        var _position = active[idx];
+        var idx = Math.random() * active.length | 0;
+        var position = active[idx];
 
-        for (var m = 0; m < k; m++) {
+        for (var m = 0; m < k; ++m) {
 
           var angle = 2 * Math.PI * Math.random(),
               rad = Math.sqrt(Math.random() * R + radius2),
-              samplex = _position[0] + r * Math.cos(rad),
-              sampley = _position[1] + r * Math.sin(rad);
+              samplex = position[0] + r * Math.cos(rad),
+              sampley = position[1] + r * Math.sin(rad);
 
           if (0 <= samplex && samplex < 300 && 0 <= sampley && sampley < 300 && dist(samplex, sampley)) {
+
             return queueUp(samplex, sampley);
           }
         }
+
         active[idx] = active[--queueSize];
         active.length = queueSize;
       }
     };
 
     function dist(x, y) {
-      var colPosition = Math.floor(x / w) | 0; // sample's position on the grid
-      var rowPosition = Math.floor(y / w) | 0;
+      var colPosition = x / w | 0; // sample's position on the grid
+      var rowPosition = y / w | 0;
       var i0 = Math.max(colPosition - 2, 0),
           j0 = Math.max(rowPosition - 2, 0),
           i1 = Math.min(colPosition + 3, cols),
@@ -24433,56 +24305,24 @@ var mc = exports.mc = function mc() {
       for (rowPosition = j0; rowPosition < j1; ++rowPosition) {
         var o = rowPosition * cols;
         for (colPosition = i0; colPosition < i1; ++colPosition) {
-          if (position = grid[o + rowPosition]) {
+
+          if (s = grid[o + colPosition]) {
             var s,
                 dx = s[0] - x,
                 dy = s[1] - y;
+
             if (dx * dx + dy * dy < radius2) return false;
           }
         }
       }
+
       return true;
     }
-    //
-    //
-    //     if (colPosition > -1 && rowPosition > -1 &&
-    //         colPosition < cols && rowPosition < rows &&
-    //         !grid[colPosition + rowPosition * cols]) {
-    //
-    //       let acceptableDistance = true;
-    //
-    //       for (let e = -1; e <= 1; e++) { //spot to left, spot to right
-    //         for (let p = -1; p<= 1; p++) {
-    //           let neighborIndex = (colPosition + e) + (rowPosition + p) * cols
-    //           let neighbor = grid[neighborIndex]
-    //           debugger
-    //           if (neighbor) {
-    //             let a = neighbor.x - sample.x;
-    //             let b = neighbor.y - sample.y;
-    //
-    //             let dist = Math.sqrt(a*a + b*b);//distance between sample and neighbor
-    //             debugger
-    //             if (dist < r) {
-    //               debugger
-    //               acceptableDistance = false;
-    //             }
-    //           }
-    //         }
-    //       }
-    //       if (acceptableDistance) {
-    //         return queueUp(sample.x, sample.y)
-    //       }
-    //     }
-    //   }
-    //   active[idx] = active[--queueSize];
-    //   active.length = queueSize;
-    // }
-    // }
-    // }
-    // }
+
     function queueUp(a, b) {
       var samp = [a, b];
       active.push(samp);
+      grid[cols * (b / w | 0) + (a / w | 0)] = samp;
       ++sampleSize;
       ++queueSize;
       return samp;
@@ -24491,6 +24331,250 @@ var mc = exports.mc = function mc() {
 };
 
 mc();
+
+/***/ }),
+/* 491 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.generateLines = undefined;
+
+var _d = __webpack_require__(55);
+
+var d3 = _interopRequireWildcard(_d);
+
+var _d3Scale = __webpack_require__(475);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var bodySelection = d3.select("body");
+var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50);
+
+var generateLines = exports.generateLines = function generateLines() {
+
+  var w = 800,
+      h = 50;
+
+  var n = 300,
+      x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
+      a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
+      data = d3.shuffle(d3.range(n)),
+      duration = 250;
+
+  var l = svgSelection.selectAll("line").data(data).enter().append("line").style("stroke", "pink").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", h).attr("transform", transform);
+
+  start();
+
+  // Start the animation!
+  function start() {
+    var passes = mergesort(data).reverse();
+
+    update();
+
+    function update() {
+      var pass = passes.pop();
+
+      l.data(pass, Number).transition().duration(duration).attr("transform", transform);
+
+      if (passes.length) {
+        setTimeout(update, duration);
+      } else {
+        d3.shuffle(data);
+        setTimeout(start, duration + 4000);
+      }
+    }
+  }
+
+  function transform(d, i) {
+    return "translate(" + x(i) + "," + h + ")rotate(" + a(d) + ")";
+  }
+
+  // let trans = d3.transform()
+  //   .translate(function(d, i) { return [x(i), h]})
+  //   .rotate(a(d));
+
+  // Sorts the specified array using bottom-up mergesort, returning an array of
+  // arrays representing the state of the specified array after each insertion for
+  // each parallel pass. The first pass is performed at size = 2.
+  function mergesort(array) {
+    var sorted = [],
+        i = void 0,
+        j = void 0,
+        n = array.length,
+        m = 1;
+
+    // double the size each pass
+    while (m < array.length) {
+      i = j = 0;while (i < array.length) {
+        j += merge(i, i += m, i += m);
+      }if (j) sorted.push(array.slice());else m <<= 1;
+    }
+
+    // Merges two adjacent sorted arrays in-place.
+    function merge(start, middle, end) {
+      middle = Math.min(array.length, middle);
+      end = Math.min(array.length, end);
+      for (; start < middle; start++) {
+        if (array[start] > array[middle]) {
+          var v = array[start];
+          array[start] = array[middle];
+          insert(middle, end, v);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Inserts the value v into the subarray specified by start and end.
+    function insert(start, end, v) {
+      while (start + 1 < end && array[start + 1] < v) {
+        var tmp = array[start];
+        array[start] = array[start + 1];
+        array[start + 1] = tmp;
+        start++;
+      }
+      array[start] = v;
+    }
+
+    return sorted;
+  }
+  // function mergesort(array, callback) {
+  //   if (array.length <= 1) return array;
+  //
+  //   if (!callback) callback = (left,  right) => {
+  //     return left < right ? -1 : left > right ? 1 : 0;
+  //   };
+  //
+  //   const mid = Math.floor(array.length / 2);
+  //   const sortedLeft = mergesort(array.slice(0, mid), callback);
+  //   const sortedRight = mergesort(array.slice(mid), callback);
+  //
+  //   return merge(sortedLeft, sortedRight, callback);
+  // }
+  //
+  // function merge(left, right, callback) {
+  //   let merged = [];
+  //
+  //   while (left.length && right.length) {
+  //     switch(callback(left[0], right[0])) {
+  //       case -1:
+  //         merged.push(left.shift());
+  //         break;
+  //       case 0:
+  //         merged.push(left.shift());
+  //         break;
+  //       case 1:
+  //         merged.push(right.shift());
+  //         break;
+  //     }
+  //   }
+  //
+  //   merged = merged.concat(left);
+  //   merged = merged.concat(right);
+  //
+  //   return merged;
+  // }
+};
+generateLines();
+
+/***/ }),
+/* 492 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.shuffle = undefined;
+
+var _d = __webpack_require__(55);
+
+var d3 = _interopRequireWildcard(_d);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var bodySelection = d3.select("body");
+var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50);
+
+var shuffle = exports.shuffle = function shuffle() {
+  var w = 800,
+      h = 50;
+
+  var n = 300,
+      x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
+      a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
+      data = d3.shuffle(d3.range(n)),
+      duration = 250;
+
+  var l = svgSelection.selectAll("line").data(data).enter().append("line").style("stroke", "pink").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", h).attr("transform", transform);
+
+  start();
+
+  // Start the animation!
+  function start() {
+    debugger;
+    var passes = shuff(data).reverse();
+
+    update();
+
+    function update() {
+      var pass = passes.pop();
+
+      l.data(pass, Number).transition().duration(duration).attr("transform", transform);
+
+      // if (passes.length) {
+      //   setTimeout(update, duration);
+      // } else {
+      d3.shuffle(data);
+      setTimeout(start, duration + 4000);
+      // }
+    }
+  }
+
+  function transform(d, i) {
+    return "translate(" + x(i) + "," + h + ")rotate(" + a(d) + ")";
+  }
+
+  function shuff(array) {
+    var arrLength = array.length,
+        target,
+        i;
+
+    // While there remain elements to shuffle…
+    while (arrLength) {
+
+      // Pick a remaining element…
+      i = Math.floor(Math.random() * m--);
+
+      // And swap it with the current element.
+      target = array[arrLength];
+      array[arrLength] = array[i];
+      array[i] = t;
+    }
+
+    // Inserts the value v into the subarray specified by start and end.
+    function insert(start, end, v) {
+      while (start + 1 < end && array[start + 1] < v) {
+        var tmp = array[start];
+        array[start] = array[start + 1];
+        array[start + 1] = tmp;
+        start++;
+      }
+      array[start] = v;
+    }
+
+    return array;
+  }
+};
+
+shuffle();
 
 /***/ })
 /******/ ]);

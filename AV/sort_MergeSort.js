@@ -8,15 +8,6 @@ const svgSelection = bodySelection.append("svg")
 .attr("height", 50);
 
 
-//NOT NECESSARY
-// let l = svgSelection.append("line")
-// .style("stroke", "pink")
-// .attr("x1", 0)
-// .attr("y1", 30)
-// .attr("x2", 20)
-// .attr("y2", 30);
-
-
 export const generateLines = () => {
 
   let w = 800,
@@ -42,13 +33,11 @@ export const generateLines = () => {
 
   // Start the animation!
   function start() {
-    debugger
     let passes = mergesort(data).reverse();
 
     update();
 
     function update() {
-      debugger
       let pass = passes.pop();
 
       l.data(pass, Number)
