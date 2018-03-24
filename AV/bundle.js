@@ -24354,7 +24354,7 @@ var mc = exports.mc = function mc() {
   var start = draw();
   // debugger
   var generateDots = d3.timer(function () {
-    for (var _i = 0; _i < 10; _i++) {
+    for (var i = 0; i < 10; i++) {
       // debugger
       var s = start();
       if (!s) return true;
@@ -24370,113 +24370,123 @@ var mc = exports.mc = function mc() {
   //if you change the dimensions of SVG then remember to change
   //row and column dimensions as well
 
-  var r = 10; //min dstance between points
-  var k = 30; //limit to # of samples to choose before rejection
-  var grid = [];
-  var w = r / Math.sqrt(2),
-      //size of cells holding samples / n = 2 in the grid
-  active = [],
-      cols = void 0,
-      rows = void 0,
-
-  // ordered = [],
-  // queue = [],
-  queueSize = 0,
-      sampleSize = 0;
-
-  function setup() {
-    cols = Math.floor(400 / w);
-    rows = Math.floor(400 / w);
-
-    for (var i = 0; i < cols * rows; i++) {
-      grid[i] = undefined;
-    }
-  }
-
-  setup();
-  var x = Math.floor(Math.random() * 300); //random point
-  var y = Math.floor(Math.random() * 300); //random point
-  var i = Math.floor(x / w); //column position of sample
-  var j = Math.floor(y / w); //width position of sample
-  var randomPoint = { x: x, y: y }; //point coordinates
-
-  grid[i + j * cols] = randomPoint; //inserting the point into the grid
-
-  active.push(randomPoint);
 
   function draw() {
+    var r = 10; //min dstance between points
+    var k = 30; //limit to # of samples to choose before rejection
+    var grid = [];
+    var radius2 = r * r;
+    var R = 3 * radius2;
+    var w = r / Math.sqrt(2),
+        //size of cells holding samples / n = 2 in the grid
+    active = [],
+        queueSize = 0,
+        sampleSize = 0;
+    var cols = Math.floor(300 / w),
+        rows = Math.floor(300 / w);
+
+    // let x = Math.floor(Math.random() * 300); //random point
+    // let y = Math.floor(Math.random() * 300); //random point
+    // let i = Math.floor(x / w); //column position of sample
+    // let j = Math.floor(y / w); //width position of sample
+    // let randomPoint = {x: x, y: y}; //point coordinates
+    //
+    // grid[i + j * cols] = randomPoint; //inserting the point into the grid
+
+    // active.push(randomPoint);
     // debugger
     return function () {
-      debugger;
+
       if (!sampleSize) return queueUp(Math.random() * 300, Math.random() * 300);
       // if (active.length > 0) {
-      debugger;
 
       while (queueSize) {
-        debugger;
-        var idx = Math.random() * queueSize | 0,
-            position = active[idx];
-        // let found = false;
-        // let randomIndex = Math.floor(Math.random() * active.length);
-        // let position = active[randomIndex];
+        // let idx = Math.random() * queueSize | 0,
+
+        var idx = Math.floor(Math.random() * active.length) | 0;
+        var _position = active[idx];
 
         for (var m = 0; m < k; m++) {
-          debugger;
-          var magnitude = Math.floor(Math.random() * (r + 1)) + r;
-          var randomAngle = Math.random() * Math.PI * 2;
-          var randomAngle2 = Math.random() * Math.PI * 2;
-          var sampleX = Math.cos(randomAngle) * magnitude + position.x;
-          var sampleY = Math.sin(randomAngle2) * magnitude + position.y;
-          var sample = { x: sampleX, y: sampleY };
-          // console.log(sample)
 
+          var angle = 2 * Math.PI * Math.random(),
+              rad = Math.sqrt(Math.random() * R + radius2),
+              samplex = _position[0] + r * Math.cos(rad),
+              sampley = _position[1] + r * Math.sin(rad);
 
-          var colPosition = Math.floor(sample.x / w); // sample's position on the grid
-          var rowPosition = Math.floor(sample.y / w);
-
-          if (colPosition > -1 && rowPosition > -1 && colPosition < cols && rowPosition < rows && !grid[colPosition + rowPosition * cols]) {
-
-            var acceptableDistance = true;
-
-            for (var e = -1; e <= 1; e++) {
-              //spot to left, spot to right
-              // for (let p = -1; p<= 1; p++) {
-              var neighborIndex = colPosition + i + (rowPosition + j) * cols;
-              var neighbor = grid[neighborIndex];
-              // debugger
-              if (neighbor) {
-                var a = neighbor.x - sample.x;
-                var b = neighbor.y - sample.y;
-
-                var dist = Math.sqrt(a * a + b * b); //distance between sample and neighbor
-                if (dist < r) {
-                  acceptableDistance = false;
-                  debugger;
-                }
-              }
-              // }
-            }
-            if (acceptableDistance) {
-              return queueUp(sample.x, sample.y);
-              debugger;
-            }
+          if (0 <= samplex && samplex < 300 && 0 <= sampley && sampley < 300 && dist(samplex, sampley)) {
+            return queueUp(samplex, sampley);
           }
         }
         active[idx] = active[--queueSize];
         active.length = queueSize;
       }
-      // }
     };
-  }
-  function queueUp(a, b) {
-    var samp = [a, b];
-    active.push(samp);
-    // found = true;
-    // grid[300 * (b / w | 0) + (a / w | 0)] = samp;
-    // ordered.push(samp);
-    ++sampleSize;
-    ++queueSize;
-    return samp;
+
+    function dist(x, y) {
+      var colPosition = Math.floor(x / w) | 0; // sample's position on the grid
+      var rowPosition = Math.floor(y / w) | 0;
+      var i0 = Math.max(colPosition - 2, 0),
+          j0 = Math.max(rowPosition - 2, 0),
+          i1 = Math.min(colPosition + 3, cols),
+          j1 = Math.min(rowPosition + 3, rows);
+
+      for (rowPosition = j0; rowPosition < j1; ++rowPosition) {
+        var o = rowPosition * cols;
+        for (colPosition = i0; colPosition < i1; ++colPosition) {
+          if (position = grid[o + rowPosition]) {
+            var s,
+                dx = s[0] - x,
+                dy = s[1] - y;
+            if (dx * dx + dy * dy < radius2) return false;
+          }
+        }
+      }
+      return true;
+    }
+    //
+    //
+    //     if (colPosition > -1 && rowPosition > -1 &&
+    //         colPosition < cols && rowPosition < rows &&
+    //         !grid[colPosition + rowPosition * cols]) {
+    //
+    //       let acceptableDistance = true;
+    //
+    //       for (let e = -1; e <= 1; e++) { //spot to left, spot to right
+    //         for (let p = -1; p<= 1; p++) {
+    //           let neighborIndex = (colPosition + e) + (rowPosition + p) * cols
+    //           let neighbor = grid[neighborIndex]
+    //           debugger
+    //           if (neighbor) {
+    //             let a = neighbor.x - sample.x;
+    //             let b = neighbor.y - sample.y;
+    //
+    //             let dist = Math.sqrt(a*a + b*b);//distance between sample and neighbor
+    //             debugger
+    //             if (dist < r) {
+    //               debugger
+    //               acceptableDistance = false;
+    //             }
+    //           }
+    //         }
+    //       }
+    //       if (acceptableDistance) {
+    //         return queueUp(sample.x, sample.y)
+    //       }
+    //     }
+    //   }
+    //   active[idx] = active[--queueSize];
+    //   active.length = queueSize;
+    // }
+    // }
+    // }
+    // }
+    function queueUp(a, b) {
+      var samp = [a, b];
+      active.push(samp);
+      ++sampleSize;
+      ++queueSize;
+      return samp;
+    }
   }
 };
 
