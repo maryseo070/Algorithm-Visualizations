@@ -4,8 +4,21 @@ import {scaleLinear} from "d3-scale";
 
 const bodySelection = d3.select("body");
 const svgSelection = bodySelection.append("svg")
-.attr("width", 800)
-.attr("height", 50);
+  .attr("width", 800)
+  .attr("height", 50)
+  .attr("id", "merge")
+  .style("display", "inline-block")
+  .style("padding", 50);
+
+
+svgSelection.append("text")
+  .attr("x", 10)
+  .attr("y", -10)
+  .style("font-size", "16px")
+  .style("font-family", "Courier")
+  .text("Merge Sort: Click Below");
+
+let merge = document.getElementById("merge")
 
 
 export const generateLines = () => {
@@ -74,19 +87,21 @@ export const generateLines = () => {
 
     // double the size each pass
     while (m < array.length) {
+      debugger
       i = j = 0; while (i < array.length) j += merge(i, i += m, i += m);
       if (j) sorted.push(array.slice());
       else m <<= 1;
+      debugger
     }
 
     // Merges two adjacent sorted arrays in-place.
     function merge(start, middle, end) {
-      middle = Math.min(array.length, middle);
+      middle = Math.min(array.length, middle); //finds the smaller one from both sides
       end = Math.min(array.length, end);
       for (; start < middle; start++) {
-        if (array[start] > array[middle]) {
+        if (array[start] > array[middle]) { //if the one on the right is smaller
           let v = array[start];
-          array[start] = array[middle];
+          array[start] = array[middle]; //move the one on the right to the left
           insert(middle, end, v);
           return true;
         }
@@ -145,4 +160,4 @@ export const generateLines = () => {
   // }
 
 };
-generateLines();
+  merge.addEventListener("click", () => generateLines());

@@ -1,11 +1,24 @@
 import * as d3 from 'd3';
 
+let width = 800
+let height = 100
 const bodySelection = d3.select("body");
 const svgSelection = bodySelection.append("svg")
-.attr("width", 300)
-.attr("height", 300);
+  .attr("width", width)
+  .attr("height", height)
+  .attr("id", "poisson")
+  .style("padding", 50);
 
+svgSelection.append("text")
+        .attr("x", 160)
+        .attr("y", -15)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("font-family", "Courier")
+        .style("margin", "auto")
+        .text("Poisson Disc Sampling: Click Below");
 
+  let poisson = document.getElementById("poisson")
 
 export const mc = () => {
 
@@ -20,10 +33,9 @@ export const mc = () => {
       .attr("cx", s[0])
       .attr("cy", s[1])
       .attr("r", 1)
-      .transition()
+      // .transition()
       // .attr("r", 2)
       .style("fill", "black")
-      // .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
     }
     // setTimeout(() => generateDots.stop(), 3000);
 
@@ -42,13 +54,13 @@ export const mc = () => {
       active = [],
       queueSize = 0,
       sampleSize = 0;
-      let cols = Math.floor(300 / w),
+      let cols = Math.floor(width / w),
           rows = Math.floor(300 / w);
       let grid = new Array(cols * rows);
 
       return function() {
 
-        if (!sampleSize) return queueUp(Math.random() * 300, Math.random() * 300);
+        if (!sampleSize) return queueUp(Math.random() * width, Math.random() * height);
 
           while (queueSize) {
 
@@ -62,7 +74,7 @@ export const mc = () => {
                 samplex = position[0] + r * Math.cos(rad),
                 sampley = position[1] + r * Math.sin(rad);
 
-            if (0 <= samplex && samplex < 300 && 0 <= sampley && sampley < 300 && dist(samplex, sampley)) {
+            if (0 <= samplex && samplex < width && 0 <= sampley && sampley < height && dist(samplex, sampley)) {
 
               return queueUp(samplex, sampley);
             }
@@ -109,6 +121,6 @@ export const mc = () => {
     }
   }
 };
+  poisson.addEventListener("click", ()=> mc());
 
-
-mc();
+// mc();
