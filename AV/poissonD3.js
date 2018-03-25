@@ -20,7 +20,7 @@ export const mc = () => {
       .attr("cx", s[0])
       .attr("cy", s[1])
       .attr("r", 1)
-      // .transition()
+      .transition()
       // .attr("r", 2)
       .style("fill", "black")
       // .style("stroke", function(d) { return d3.rgb(fill(d.id)).darker(2); })
