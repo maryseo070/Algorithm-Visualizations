@@ -81,25 +81,35 @@ export const generateLines = () => {
   function mergesort(array) {
     let sorted = [],
         i,
-        j,
-        n = array.length,
-        m = 1;
+        low,
+        arrLength = array.length,
+        size = 1;
 
     // double the size each pass
-    while (m < array.length) {
-      debugger
-      i = j = 0; while (i < array.length) j += merge(i, i += m, i += m);
-      if (j) sorted.push(array.slice());
-      else m <<= 1;
-      debugger
+    while (size < arrLength) {
+      for (size = 1; size < arrLength; size=size * 2) {
+        for (let low = 0; low < arrLength - size; low += (size * 2)) {
+          let middle = low + size - 1;
+          let high = Math.min(low + (size*2 - 1), arrLength - 1)
+          merge(low, middle, high)
+        }
+        // if (low) sorted.push(array.slice());
+      }
+      // return array
+      // i = j = 0; while (i < array.length) j += merge(i, i += m, i += m);
+      // if (j) sorted.push(array.slice());
+      // else m <<= 1;
     }
 
     // Merges two adjacent sorted arrays in-place.
     function merge(start, middle, end) {
-      middle = Math.min(array.length, middle); //finds the smaller one from both sides
+      debugger
+      middle = Math.min(array.length, middle);
       end = Math.min(array.length, end);
-      for (; start < middle; start++) {
-        if (array[start] > array[middle]) { //if the one on the right is smaller
+      debugger
+      for (; start < middle; start++) { //size of subarray
+        if (array[start] > array[middle]) {
+          debugger
           let v = array[start];
           array[start] = array[middle]; //move the one on the right to the left
           insert(middle, end, v);
@@ -110,22 +120,23 @@ export const generateLines = () => {
     }
 
     // Inserts the value v into the subarray specified by start and end.
-    function insert(start, end, v) {
-      while (start + 1 < end && array[start + 1] < v) {
-        let tmp = array[start];
-        array[start] = array[start + 1];
-        array[start + 1] = tmp;
-        start++;
+    function insert(startIdx, endIdx, target) {
+      while (startIdx + 1 < endIdx && array[startIdx + 1] < target) { //while startIdx and end are at least 2
+        //while array[startIdx + 1] is less than the target valu
+        let temp = array[startIdx]; //temporary = array[startIdx]
+        array[startIdx] = array[startIdx + 1]; // array[startIdx] is the next value
+        array[startIdx + 1] = temp; // the next value is set to temporary
+        start++; //start incremented
       }
-      array[start] = v;
+      array[start] = target; //array[start] is target value once the while loop breaks
     }
 
     return sorted;
   }
-  // function mergesort(array, callback) {
+  // function mergesort(array) {
   //   if (array.length <= 1) return array;
   //
-  //   if (!callback) callback = (left,  right) => {
+  //   let callback = (left,  right) => {
   //     return left < right ? -1 : left > right ? 1 : 0;
   //   };
   //
