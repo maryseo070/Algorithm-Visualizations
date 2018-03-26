@@ -44,9 +44,9 @@ export const generateLines = () => {
 
   start();
 
-  // Start the animation!
   function start() {
     let passes = mergesort(data).reverse();
+
 
     update();
 
@@ -60,10 +60,11 @@ export const generateLines = () => {
 
       if (passes.length) {
         setTimeout(update, duration);
-      } else {
-        d3.shuffle(data);
-        setTimeout(start, duration + 4000);
       }
+        // d3.shuffle(data);
+        // debugger
+        // setTimeout(start, duration + 4000);
+
     }
   }
 
@@ -83,13 +84,11 @@ export const generateLines = () => {
         size,
         j,
         m = 1;
-        debugger
+
     // double the size each pass
     while (m < array.length) {
-      debugger
       size = j = 0;
       while (size < array.length) {
-        debugger
         j += merge(size, size += m, size += m);
         //adding true to j increments it by 1
         //adding false increments it by 0....after being 0 it will always be true
@@ -98,15 +97,16 @@ export const generateLines = () => {
       else m *= 2;
     }
 
-    // Merges two adjacent sorted arrays in-place.
+    //checks if arra[start] > arrat[middle] and if so switches them
+    //if not returns false
     function merge(start, middle, end) {
-      middle = Math.min(array.length, middle);
-      end = Math.min(array.length, end);
+      middle = Math.min(array.length - 1, middle);
+      end = Math.min(array.length - 1, end);
       for (; start < middle; start++) {
-        if (array[start] > array[middle]) {
-          let v = array[start];
-          array[start] = array[middle];
-          insert(middle, end, v);
+        if (array[start] > array[middle]) { //i.e., if array[0] > array[1]
+          let v = array[start]; //set v = array[0]
+          array[start] = array[middle]; //set array[0] = array[1]
+          insert(middle, end, v); //insert v into array[0]'s position
           return true;
         }
       }

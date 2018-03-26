@@ -24,7 +24,7 @@ export const shuffle = () => {
   let n = 300,
       x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
       a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
-      data = d3.shuffle(d3.range(n)),
+      data = (d3.range(n)),
       duration = 250;
 
   let l = svgSelection.selectAll("line")
@@ -39,9 +39,7 @@ export const shuffle = () => {
 
   start();
 
-  // Start the animation!
   function start() {
-    // debugger
     let passes = shuff(data).reverse();
 
     update();
@@ -54,11 +52,13 @@ export const shuffle = () => {
           .duration(duration)
           .attr("transform", transform);
 
-      // if (passes.length) {
-      //   setTimeout(update, duration);
-      // } else {
-        d3.shuffle(data);
-        setTimeout(start, duration + 4000);
+      if (passes.length) {
+        debugger
+        setTimeout(update, duration);
+      }
+
+        // debugger
+        // setTimeout(start, duration + 4000);
       // }
     }
   }
@@ -81,19 +81,6 @@ export const shuffle = () => {
       array[arrLength] = array[i];
       array[i] = target;
     }
-
-
-    // Inserts the value v into the subarray specified by start and end.
-    function insert(start, end, v) {
-      while (start + 1 < end && array[start + 1] < v) {
-        let tmp = array[start];
-        array[start] = array[start + 1];
-        array[start + 1] = tmp;
-        start++;
-      }
-      array[start] = v;
-    }
-
     return array;
   }
 };

@@ -23255,16 +23255,14 @@ var shuffle = exports.shuffle = function shuffle() {
   var n = 300,
       x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
       a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
-      data = d3.shuffle(d3.range(n)),
+      data = d3.range(n),
       duration = 250;
 
   var l = svgSelection.selectAll("line").data(data).enter().append("line").style("stroke", "pink").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", h).attr("transform", transform);
 
   start();
 
-  // Start the animation!
   function start() {
-    // debugger
     var passes = shuff(data).reverse();
 
     update();
@@ -23274,11 +23272,13 @@ var shuffle = exports.shuffle = function shuffle() {
 
       l.data(pass, Number).transition().duration(duration).attr("transform", transform);
 
-      // if (passes.length) {
-      //   setTimeout(update, duration);
-      // } else {
-      d3.shuffle(data);
-      setTimeout(start, duration + 4000);
+      if (passes.length) {
+        debugger;
+        setTimeout(update, duration);
+      }
+
+      // debugger
+      // setTimeout(start, duration + 4000);
       // }
     }
   }
@@ -23303,18 +23303,6 @@ var shuffle = exports.shuffle = function shuffle() {
       array[arrLength] = array[i];
       array[i] = target;
     }
-
-    // Inserts the value v into the subarray specified by start and end.
-    function insert(start, end, v) {
-      while (start + 1 < end && array[start + 1] < v) {
-        var tmp = array[start];
-        array[start] = array[start + 1];
-        array[start + 1] = tmp;
-        start++;
-      }
-      array[start] = v;
-    }
-
     return array;
   }
 };
@@ -23366,7 +23354,6 @@ var generateLines = exports.generateLines = function generateLines() {
 
   start();
 
-  // Start the animation!
   function start() {
     var passes = mergesort(data).reverse();
 
@@ -23379,10 +23366,10 @@ var generateLines = exports.generateLines = function generateLines() {
 
       if (passes.length) {
         setTimeout(update, duration);
-      } else {
-        d3.shuffle(data);
-        setTimeout(start, duration + 4000);
       }
+      // d3.shuffle(data);
+      // debugger
+      // setTimeout(start, duration + 4000);
     }
   }
 
@@ -23402,13 +23389,11 @@ var generateLines = exports.generateLines = function generateLines() {
         size = void 0,
         j = void 0,
         m = 1;
-    debugger;
+
     // double the size each pass
     while (m < array.length) {
-      debugger;
       size = j = 0;
       while (size < array.length) {
-        debugger;
         j += merge(size, size += m, size += m);
         //adding true to j increments it by 1
         //adding false increments it by 0....after being 0 it will always be true
@@ -23416,15 +23401,17 @@ var generateLines = exports.generateLines = function generateLines() {
       if (j) sorted.push(array.slice());else m *= 2;
     }
 
-    // Merges two adjacent sorted arrays in-place.
+    //checks if arra[start] > arrat[middle] and if so switches them
+    //if not returns false
     function merge(start, middle, end) {
-      middle = Math.min(array.length, middle);
-      end = Math.min(array.length, end);
+      middle = Math.min(array.length - 1, middle);
+      end = Math.min(array.length - 1, end);
       for (; start < middle; start++) {
         if (array[start] > array[middle]) {
-          var v = array[start];
-          array[start] = array[middle];
-          insert(middle, end, v);
+          //i.e., if array[0] > array[1]
+          var v = array[start]; //set v = array[0]
+          array[start] = array[middle]; //set array[0] = array[1]
+          insert(middle, end, v); //insert v into array[0]'s position
           return true;
         }
       }
