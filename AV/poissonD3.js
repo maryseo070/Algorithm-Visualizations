@@ -50,12 +50,12 @@ export const mc = () => {
       let k = 30; //limit to # of samples to choose before rejection
       let radius2 = r * r;
       let R = 3 * radius2;
-      let w = r * Math.SQRT1_2, //size of cells holding samples / n = 2 in the grid
+      let cellSize = r * Math.SQRT1_2, //size of cells holding samples / n = 2 in the grid
       active = [],
       queueSize = 0,
       sampleSize = 0;
-      let cols = Math.floor(width / w),
-          rows = Math.floor(300 / w);
+      let cols = Math.floor(width / cellSize),
+          rows = Math.floor(height / cellSize);
       let grid = new Array(cols * rows);
 
       return function() {
@@ -65,14 +65,14 @@ export const mc = () => {
           while (queueSize) {
 
           let idx = Math.random() * active.length | 0;
-          let position = active[idx];
+          let target = active[idx];
 
           for (let m = 0; m < k; ++m) {
 
             let angle = 2 * Math.PI * Math.random(),
                 rad = Math.sqrt(Math.random() * R + radius2),
-                samplex = position[0] + r * Math.cos(rad),
-                sampley = position[1] + r * Math.sin(rad);
+                samplex = target[0] + r * Math.cos(rad), //new random x angle created with rad(new random radius) offset by r
+                sampley = target[1] + r * Math.sin(rad);
 
             if (0 <= samplex && samplex < width && 0 <= sampley && sampley < height && dist(samplex, sampley)) {
 
@@ -86,12 +86,12 @@ export const mc = () => {
       };
 
       function dist(x, y) {
-        let colPosition = x / w | 0; // sample's position on the grid
-        let rowPosition = y / w | 0;
-        let i0 = Math.max(colPosition - 2, 0),
-            j0 = Math.max(rowPosition - 2, 0),
-            i1 = Math.min(colPosition + 3, cols),
-            j1 = Math.min(rowPosition + 3, rows);
+        let colPosition = x / cellSize | 0; // sample's position on the grid
+        let rowPosition = y / cellSize | 0;
+        let i0 = Math.max(colPosition - 2, 0), //the max x-range between the sample's column Pos and 0
+            j0 = Math.max(rowPosition - 2, 0), //the max y-range between sample's row pos and 0
+            i1 = Math.min(colPosition + 3, cols), // the min x-range between col-Pos and width of the whole canvas
+            j1 = Math.min(rowPosition + 3, rows); // min min y-range between row-Pos and
 
         for (rowPosition = j0; rowPosition < j1; ++rowPosition) {
           var o = rowPosition * cols;
@@ -114,7 +114,7 @@ export const mc = () => {
     function queueUp(a, b){
       var samp = [a, b];
       active.push(samp);
-      grid[cols * (b / w | 0) + (a / w | 0)] = samp;
+      grid[cols * (b / cellSize | 0) + (a / cellSize | 0)] = samp;
       ++sampleSize;
       ++queueSize;
       return samp;

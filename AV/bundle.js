@@ -1122,19 +1122,7 @@ var slice = array.slice;
 
 
 /***/ }),
-/* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return map; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return slice; });
-var array = Array.prototype;
-
-var map = array.map;
-var slice = array.slice;
-
-
-/***/ }),
+/* 17 */,
 /* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2350,88 +2338,7 @@ Diagram.prototype = {
 
 
 /***/ }),
-/* 38 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = linearish;
-/* harmony export (immutable) */ __webpack_exports__["a"] = linear;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__continuous__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tickFormat__ = __webpack_require__(480);
-
-
-
-
-
-function linearish(scale) {
-  var domain = scale.domain;
-
-  scale.ticks = function(count) {
-    var d = domain();
-    return Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["B" /* ticks */])(d[0], d[d.length - 1], count == null ? 10 : count);
-  };
-
-  scale.tickFormat = function(count, specifier) {
-    return Object(__WEBPACK_IMPORTED_MODULE_3__tickFormat__["a" /* default */])(domain(), count, specifier);
-  };
-
-  scale.nice = function(count) {
-    if (count == null) count = 10;
-
-    var d = domain(),
-        i0 = 0,
-        i1 = d.length - 1,
-        start = d[i0],
-        stop = d[i1],
-        step;
-
-    if (stop < start) {
-      step = start, start = stop, stop = step;
-      step = i0, i0 = i1, i1 = step;
-    }
-
-    step = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["z" /* tickIncrement */])(start, stop, count);
-
-    if (step > 0) {
-      start = Math.floor(start / step) * step;
-      stop = Math.ceil(stop / step) * step;
-      step = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["z" /* tickIncrement */])(start, stop, count);
-    } else if (step < 0) {
-      start = Math.ceil(start * step) / step;
-      stop = Math.floor(stop * step) / step;
-      step = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["z" /* tickIncrement */])(start, stop, count);
-    }
-
-    if (step > 0) {
-      d[i0] = Math.floor(start / step) * step;
-      d[i1] = Math.ceil(stop / step) * step;
-      domain(d);
-    } else if (step < 0) {
-      d[i0] = Math.ceil(start * step) / step;
-      d[i1] = Math.floor(stop * step) / step;
-      domain(d);
-    }
-
-    return scale;
-  };
-
-  return scale;
-}
-
-function linear() {
-  var scale = Object(__WEBPACK_IMPORTED_MODULE_2__continuous__["b" /* default */])(__WEBPACK_IMPORTED_MODULE_2__continuous__["c" /* deinterpolateLinear */], __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__["m" /* interpolateNumber */]);
-
-  scale.copy = function() {
-    return Object(__WEBPACK_IMPORTED_MODULE_2__continuous__["a" /* copy */])(scale, linear());
-  };
-
-  return linearish(scale);
-}
-
-
-/***/ }),
+/* 38 */,
 /* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3265,134 +3172,7 @@ Cardinal.prototype = {
 
 
 /***/ }),
-/* 55 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = deinterpolateLinear;
-/* harmony export (immutable) */ __webpack_exports__["a"] = copy;
-/* harmony export (immutable) */ __webpack_exports__["b"] = continuous;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__array__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__constant__ = __webpack_require__(94);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__number__ = __webpack_require__(178);
-
-
-
-
-
-
-var unit = [0, 1];
-
-function deinterpolateLinear(a, b) {
-  return (b -= (a = +a))
-      ? function(x) { return (x - a) / b; }
-      : Object(__WEBPACK_IMPORTED_MODULE_3__constant__["a" /* default */])(b);
-}
-
-function deinterpolateClamp(deinterpolate) {
-  return function(a, b) {
-    var d = deinterpolate(a = +a, b = +b);
-    return function(x) { return x <= a ? 0 : x >= b ? 1 : d(x); };
-  };
-}
-
-function reinterpolateClamp(reinterpolate) {
-  return function(a, b) {
-    var r = reinterpolate(a = +a, b = +b);
-    return function(t) { return t <= 0 ? a : t >= 1 ? b : r(t); };
-  };
-}
-
-function bimap(domain, range, deinterpolate, reinterpolate) {
-  var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
-  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
-  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
-  return function(x) { return r0(d0(x)); };
-}
-
-function polymap(domain, range, deinterpolate, reinterpolate) {
-  var j = Math.min(domain.length, range.length) - 1,
-      d = new Array(j),
-      r = new Array(j),
-      i = -1;
-
-  // Reverse descending domains.
-  if (domain[j] < domain[0]) {
-    domain = domain.slice().reverse();
-    range = range.slice().reverse();
-  }
-
-  while (++i < j) {
-    d[i] = deinterpolate(domain[i], domain[i + 1]);
-    r[i] = reinterpolate(range[i], range[i + 1]);
-  }
-
-  return function(x) {
-    var i = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["b" /* bisect */])(domain, x, 1, j) - 1;
-    return r[i](d[i](x));
-  };
-}
-
-function copy(source, target) {
-  return target
-      .domain(source.domain())
-      .range(source.range())
-      .interpolate(source.interpolate())
-      .clamp(source.clamp());
-}
-
-// deinterpolate(a, b)(x) takes a domain value x in [a,b] and returns the corresponding parameter t in [0,1].
-// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
-function continuous(deinterpolate, reinterpolate) {
-  var domain = unit,
-      range = unit,
-      interpolate = __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__["a" /* interpolate */],
-      clamp = false,
-      piecewise,
-      output,
-      input;
-
-  function rescale() {
-    piecewise = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
-    output = input = null;
-    return scale;
-  }
-
-  function scale(x) {
-    return (output || (output = piecewise(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate)))(+x);
-  }
-
-  scale.invert = function(y) {
-    return (input || (input = piecewise(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
-  };
-
-  scale.domain = function(_) {
-    return arguments.length ? (domain = __WEBPACK_IMPORTED_MODULE_2__array__["a" /* map */].call(_, __WEBPACK_IMPORTED_MODULE_4__number__["a" /* default */]), rescale()) : domain.slice();
-  };
-
-  scale.range = function(_) {
-    return arguments.length ? (range = __WEBPACK_IMPORTED_MODULE_2__array__["b" /* slice */].call(_), rescale()) : range.slice();
-  };
-
-  scale.rangeRound = function(_) {
-    return range = __WEBPACK_IMPORTED_MODULE_2__array__["b" /* slice */].call(_), interpolate = __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__["r" /* interpolateRound */], rescale();
-  };
-
-  scale.clamp = function(_) {
-    return arguments.length ? (clamp = !!_, rescale()) : clamp;
-  };
-
-  scale.interpolate = function(_) {
-    return arguments.length ? (interpolate = _, rescale()) : interpolate;
-  };
-
-  return rescale();
-}
-
-
-/***/ }),
+/* 55 */,
 /* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5710,18 +5490,7 @@ function clipEdges(x0, y0, x1, y1) {
 
 
 /***/ }),
-/* 94 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function(x) {
-  return function() {
-    return x;
-  };
-});
-
-
-/***/ }),
+/* 94 */,
 /* 95 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -10157,248 +9926,10 @@ function transform(node) {
 
 
 /***/ }),
-/* 177 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return implicit; });
-/* harmony export (immutable) */ __webpack_exports__["a"] = ordinal;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_collection__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(17);
-
-
-
-var implicit = {name: "implicit"};
-
-function ordinal(range) {
-  var index = Object(__WEBPACK_IMPORTED_MODULE_0_d3_collection__["c" /* map */])(),
-      domain = [],
-      unknown = implicit;
-
-  range = range == null ? [] : __WEBPACK_IMPORTED_MODULE_1__array__["b" /* slice */].call(range);
-
-  function scale(d) {
-    var key = d + "", i = index.get(key);
-    if (!i) {
-      if (unknown !== implicit) return unknown;
-      index.set(key, i = domain.push(d));
-    }
-    return range[(i - 1) % range.length];
-  }
-
-  scale.domain = function(_) {
-    if (!arguments.length) return domain.slice();
-    domain = [], index = Object(__WEBPACK_IMPORTED_MODULE_0_d3_collection__["c" /* map */])();
-    var i = -1, n = _.length, d, key;
-    while (++i < n) if (!index.has(key = (d = _[i]) + "")) index.set(key, domain.push(d));
-    return scale;
-  };
-
-  scale.range = function(_) {
-    return arguments.length ? (range = __WEBPACK_IMPORTED_MODULE_1__array__["b" /* slice */].call(_), scale) : range.slice();
-  };
-
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
-  scale.copy = function() {
-    return ordinal()
-        .domain(domain)
-        .range(range)
-        .unknown(unknown);
-  };
-
-  return scale;
-}
-
-
-/***/ }),
-/* 178 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function(x) {
-  return +x;
-});
-
-
-/***/ }),
-/* 179 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function(domain, interval) {
-  domain = domain.slice();
-
-  var i0 = 0,
-      i1 = domain.length - 1,
-      x0 = domain[i0],
-      x1 = domain[i1],
-      t;
-
-  if (x1 < x0) {
-    t = i0, i0 = i1, i1 = t;
-    t = x0, x0 = x1, x1 = t;
-  }
-
-  domain[i0] = interval.floor(x0);
-  domain[i1] = interval.ceil(x1);
-  return domain;
-});
-
-
-/***/ }),
-/* 180 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = calendar;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_d3_time__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_d3_time_format__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__array__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__continuous__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__nice__ = __webpack_require__(179);
-
-
-
-
-
-
-
-
-var durationSecond = 1000,
-    durationMinute = durationSecond * 60,
-    durationHour = durationMinute * 60,
-    durationDay = durationHour * 24,
-    durationWeek = durationDay * 7,
-    durationMonth = durationDay * 30,
-    durationYear = durationDay * 365;
-
-function date(t) {
-  return new Date(t);
-}
-
-function number(t) {
-  return t instanceof Date ? +t : +new Date(+t);
-}
-
-function calendar(year, month, week, day, hour, minute, second, millisecond, format) {
-  var scale = Object(__WEBPACK_IMPORTED_MODULE_5__continuous__["b" /* default */])(__WEBPACK_IMPORTED_MODULE_5__continuous__["c" /* deinterpolateLinear */], __WEBPACK_IMPORTED_MODULE_1_d3_interpolate__["m" /* interpolateNumber */]),
-      invert = scale.invert,
-      domain = scale.domain;
-
-  var formatMillisecond = format(".%L"),
-      formatSecond = format(":%S"),
-      formatMinute = format("%I:%M"),
-      formatHour = format("%I %p"),
-      formatDay = format("%a %d"),
-      formatWeek = format("%b %d"),
-      formatMonth = format("%B"),
-      formatYear = format("%Y");
-
-  var tickIntervals = [
-    [second,  1,      durationSecond],
-    [second,  5,  5 * durationSecond],
-    [second, 15, 15 * durationSecond],
-    [second, 30, 30 * durationSecond],
-    [minute,  1,      durationMinute],
-    [minute,  5,  5 * durationMinute],
-    [minute, 15, 15 * durationMinute],
-    [minute, 30, 30 * durationMinute],
-    [  hour,  1,      durationHour  ],
-    [  hour,  3,  3 * durationHour  ],
-    [  hour,  6,  6 * durationHour  ],
-    [  hour, 12, 12 * durationHour  ],
-    [   day,  1,      durationDay   ],
-    [   day,  2,  2 * durationDay   ],
-    [  week,  1,      durationWeek  ],
-    [ month,  1,      durationMonth ],
-    [ month,  3,  3 * durationMonth ],
-    [  year,  1,      durationYear  ]
-  ];
-
-  function tickFormat(date) {
-    return (second(date) < date ? formatMillisecond
-        : minute(date) < date ? formatSecond
-        : hour(date) < date ? formatMinute
-        : day(date) < date ? formatHour
-        : month(date) < date ? (week(date) < date ? formatDay : formatWeek)
-        : year(date) < date ? formatMonth
-        : formatYear)(date);
-  }
-
-  function tickInterval(interval, start, stop, step) {
-    if (interval == null) interval = 10;
-
-    // If a desired tick count is specified, pick a reasonable tick interval
-    // based on the extent of the domain and a rough estimate of tick size.
-    // Otherwise, assume interval is already a time interval and use it.
-    if (typeof interval === "number") {
-      var target = Math.abs(stop - start) / interval,
-          i = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["e" /* bisector */])(function(i) { return i[2]; }).right(tickIntervals, target);
-      if (i === tickIntervals.length) {
-        step = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["A" /* tickStep */])(start / durationYear, stop / durationYear, interval);
-        interval = year;
-      } else if (i) {
-        i = tickIntervals[target / tickIntervals[i - 1][2] < tickIntervals[i][2] / target ? i - 1 : i];
-        step = i[1];
-        interval = i[0];
-      } else {
-        step = Math.max(Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["A" /* tickStep */])(start, stop, interval), 1);
-        interval = millisecond;
-      }
-    }
-
-    return step == null ? interval : interval.every(step);
-  }
-
-  scale.invert = function(y) {
-    return new Date(invert(y));
-  };
-
-  scale.domain = function(_) {
-    return arguments.length ? domain(__WEBPACK_IMPORTED_MODULE_4__array__["a" /* map */].call(_, number)) : domain().map(date);
-  };
-
-  scale.ticks = function(interval, step) {
-    var d = domain(),
-        t0 = d[0],
-        t1 = d[d.length - 1],
-        r = t1 < t0,
-        t;
-    if (r) t = t0, t0 = t1, t1 = t;
-    t = tickInterval(interval, t0, t1, step);
-    t = t ? t.range(t0, t1 + 1) : []; // inclusive stop
-    return r ? t.reverse() : t;
-  };
-
-  scale.tickFormat = function(count, specifier) {
-    return specifier == null ? tickFormat : format(specifier);
-  };
-
-  scale.nice = function(interval, step) {
-    var d = domain();
-    return (interval = tickInterval(interval, d[0], d[d.length - 1], step))
-        ? domain(Object(__WEBPACK_IMPORTED_MODULE_6__nice__["a" /* default */])(d, interval))
-        : scale;
-  };
-
-  scale.copy = function() {
-    return Object(__WEBPACK_IMPORTED_MODULE_5__continuous__["a" /* copy */])(scale, calendar(year, month, week, day, hour, minute, second, millisecond, format));
-  };
-
-  return scale;
-}
-
-/* harmony default export */ __webpack_exports__["b"] = (function() {
-  return calendar(__WEBPACK_IMPORTED_MODULE_2_d3_time__["D" /* timeYear */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["n" /* timeMonth */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["B" /* timeWeek */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["a" /* timeDay */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["e" /* timeHour */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["j" /* timeMinute */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["r" /* timeSecond */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["h" /* timeMillisecond */], __WEBPACK_IMPORTED_MODULE_3_d3_time_format__["c" /* timeFormat */]).domain([new Date(2000, 0, 1), new Date(2000, 0, 2)]);
-});
-
-
-/***/ }),
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
 /* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23545,7 +23076,7 @@ function setup() {
         var x = Math.floor(Math.random() * 900);
         var y = Math.floor(Math.random() * 200);
         ctx.beginPath(); //Start path
-        ctx.arc(x, y, 2, 20, Math.PI * 2, true);
+        ctx.arc(x, y, 1, 20, Math.PI * 2, true);
         ctx.fill();
         // ctx.fillStyle = '#fff';
       }
@@ -23611,13 +23142,13 @@ var mc = exports.mc = function mc() {
     var k = 30; //limit to # of samples to choose before rejection
     var radius2 = r * r;
     var R = 3 * radius2;
-    var w = r * Math.SQRT1_2,
+    var cellSize = r * Math.SQRT1_2,
         //size of cells holding samples / n = 2 in the grid
     active = [],
         queueSize = 0,
         sampleSize = 0;
-    var cols = Math.floor(width / w),
-        rows = Math.floor(300 / w);
+    var cols = Math.floor(width / cellSize),
+        rows = Math.floor(height / cellSize);
     var grid = new Array(cols * rows);
 
     return function () {
@@ -23627,14 +23158,15 @@ var mc = exports.mc = function mc() {
       while (queueSize) {
 
         var idx = Math.random() * active.length | 0;
-        var position = active[idx];
+        var target = active[idx];
 
         for (var m = 0; m < k; ++m) {
 
           var angle = 2 * Math.PI * Math.random(),
               rad = Math.sqrt(Math.random() * R + radius2),
-              samplex = position[0] + r * Math.cos(rad),
-              sampley = position[1] + r * Math.sin(rad);
+              samplex = target[0] + r * Math.cos(rad),
+              //new random x angle created with rad(new random radius) offset by r
+          sampley = target[1] + r * Math.sin(rad);
 
           if (0 <= samplex && samplex < width && 0 <= sampley && sampley < height && dist(samplex, sampley)) {
 
@@ -23648,12 +23180,15 @@ var mc = exports.mc = function mc() {
     };
 
     function dist(x, y) {
-      var colPosition = x / w | 0; // sample's position on the grid
-      var rowPosition = y / w | 0;
+      var colPosition = x / cellSize | 0; // sample's position on the grid
+      var rowPosition = y / cellSize | 0;
       var i0 = Math.max(colPosition - 2, 0),
-          j0 = Math.max(rowPosition - 2, 0),
-          i1 = Math.min(colPosition + 3, cols),
-          j1 = Math.min(rowPosition + 3, rows);
+          //the max x-range between the sample's column Pos and 0
+      j0 = Math.max(rowPosition - 2, 0),
+          //the max y-range between sample's row pos and 0
+      i1 = Math.min(colPosition + 3, cols),
+          // the min x-range between col-Pos and width of the whole canvas
+      j1 = Math.min(rowPosition + 3, rows); // min min y-range between row-Pos and
 
       for (rowPosition = j0; rowPosition < j1; ++rowPosition) {
         var o = rowPosition * cols;
@@ -23675,7 +23210,7 @@ var mc = exports.mc = function mc() {
     function queueUp(a, b) {
       var samp = [a, b];
       active.push(samp);
-      grid[cols * (b / w | 0) + (a / w | 0)] = samp;
+      grid[cols * (b / cellSize | 0) + (a / cellSize | 0)] = samp;
       ++sampleSize;
       ++queueSize;
       return samp;
@@ -23804,16 +23339,17 @@ var _d = __webpack_require__(24);
 
 var d3 = _interopRequireWildcard(_d);
 
-var _d3Scale = __webpack_require__(477);
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// import {scaleLinear} from "d3-scale";
+
 
 var bodySelection = d3.select("body");
 var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).attr("id", "merge").style("display", "inline-block").style("padding", 50);
 
 svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Merge Sort: Click Below");
 
-var merge = document.getElementById("merge");
+var mergeSrt = document.getElementById("merge");
 
 var generateLines = exports.generateLines = function generateLines() {
 
@@ -23863,39 +23399,31 @@ var generateLines = exports.generateLines = function generateLines() {
   // each parallel pass. The first pass is performed at size = 2.
   function mergesort(array) {
     var sorted = [],
-        i = void 0,
-        low = void 0,
-        arrLength = array.length,
-        size = 1;
-
+        size = void 0,
+        j = void 0,
+        m = 1;
+    debugger;
     // double the size each pass
-    while (size < arrLength) {
-      for (size = 1; size < arrLength; size = size * 2) {
-        for (var _low = 0; _low < arrLength - size; _low += size * 2) {
-          var middle = _low + size - 1;
-          var high = Math.min(_low + (size * 2 - 1), arrLength - 1);
-          merge(_low, middle, high);
-        }
-        // if (low) sorted.push(array.slice());
+    while (m < array.length) {
+      debugger;
+      size = j = 0;
+      while (size < array.length) {
+        debugger;
+        j += merge(size, size += m, size += m);
+        //adding true to j increments it by 1
+        //adding false increments it by 0....after being 0 it will always be true
       }
-      // return array
-      // i = j = 0; while (i < array.length) j += merge(i, i += m, i += m);
-      // if (j) sorted.push(array.slice());
-      // else m <<= 1;
+      if (j) sorted.push(array.slice());else m *= 2;
     }
 
     // Merges two adjacent sorted arrays in-place.
     function merge(start, middle, end) {
-      debugger;
       middle = Math.min(array.length, middle);
       end = Math.min(array.length, end);
-      debugger;
       for (; start < middle; start++) {
-        //size of subarray
         if (array[start] > array[middle]) {
-          debugger;
           var v = array[start];
-          array[start] = array[middle]; //move the one on the right to the left
+          array[start] = array[middle];
           insert(middle, end, v);
           return true;
         }
@@ -23903,713 +23431,22 @@ var generateLines = exports.generateLines = function generateLines() {
       return false;
     }
 
-    // Inserts the value v into the subarray specified by start and end.
+    // Inserts the value target into the subarray specified by start and end.
     function insert(startIdx, endIdx, target) {
       while (startIdx + 1 < endIdx && array[startIdx + 1] < target) {
-        //while startIdx and end are at least 2
-        //while array[startIdx + 1] is less than the target valu
-        var temp = array[startIdx]; //temporary = array[startIdx]
-        array[startIdx] = array[startIdx + 1]; // array[startIdx] is the next value
-        array[startIdx + 1] = temp; // the next value is set to temporary
-        start++; //start incremented
+        var temp = array[startIdx];
+        array[startIdx] = array[startIdx + 1];
+        array[startIdx + 1] = temp;
+        startIdx++;
       }
-      array[start] = target; //array[start] is target value once the while loop breaks
+      array[startIdx] = target;
     }
-
     return sorted;
   }
-  // function mergesort(array) {
-  //   if (array.length <= 1) return array;
-  //
-  //   let callback = (left,  right) => {
-  //     return left < right ? -1 : left > right ? 1 : 0;
-  //   };
-  //
-  //   const mid = Math.floor(array.length / 2);
-  //   const sortedLeft = mergesort(array.slice(0, mid), callback);
-  //   const sortedRight = mergesort(array.slice(mid), callback);
-  //
-  //   return merge(sortedLeft, sortedRight, callback);
-  // }
-  //
-  // function merge(left, right, callback) {
-  //   let merged = [];
-  //
-  //   while (left.length && right.length) {
-  //     switch(callback(left[0], right[0])) {
-  //       case -1:
-  //         merged.push(left.shift());
-  //         break;
-  //       case 0:
-  //         merged.push(left.shift());
-  //         break;
-  //       case 1:
-  //         merged.push(right.shift());
-  //         break;
-  //     }
-  //   }
-  //
-  //   merged = merged.concat(left);
-  //   merged = merged.concat(right);
-  //
-  //   return merged;
-  // }
 };
-merge.addEventListener("click", function () {
+mergeSrt.addEventListener("click", function () {
   return generateLines();
 });
-
-/***/ }),
-/* 477 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_band__ = __webpack_require__(478);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleBand", function() { return __WEBPACK_IMPORTED_MODULE_0__src_band__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scalePoint", function() { return __WEBPACK_IMPORTED_MODULE_0__src_band__["b"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_identity__ = __webpack_require__(479);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleIdentity", function() { return __WEBPACK_IMPORTED_MODULE_1__src_identity__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_linear__ = __webpack_require__(38);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleLinear", function() { return __WEBPACK_IMPORTED_MODULE_2__src_linear__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_log__ = __webpack_require__(481);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleLog", function() { return __WEBPACK_IMPORTED_MODULE_3__src_log__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_ordinal__ = __webpack_require__(177);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleOrdinal", function() { return __WEBPACK_IMPORTED_MODULE_4__src_ordinal__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleImplicit", function() { return __WEBPACK_IMPORTED_MODULE_4__src_ordinal__["b"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__src_pow__ = __webpack_require__(482);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scalePow", function() { return __WEBPACK_IMPORTED_MODULE_5__src_pow__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleSqrt", function() { return __WEBPACK_IMPORTED_MODULE_5__src_pow__["b"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__src_quantile__ = __webpack_require__(483);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleQuantile", function() { return __WEBPACK_IMPORTED_MODULE_6__src_quantile__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__src_quantize__ = __webpack_require__(484);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleQuantize", function() { return __WEBPACK_IMPORTED_MODULE_7__src_quantize__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__src_threshold__ = __webpack_require__(485);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleThreshold", function() { return __WEBPACK_IMPORTED_MODULE_8__src_threshold__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__src_time__ = __webpack_require__(180);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleTime", function() { return __WEBPACK_IMPORTED_MODULE_9__src_time__["b"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__src_utcTime__ = __webpack_require__(486);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleUtc", function() { return __WEBPACK_IMPORTED_MODULE_10__src_utcTime__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__src_sequential__ = __webpack_require__(487);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "scaleSequential", function() { return __WEBPACK_IMPORTED_MODULE_11__src_sequential__["a"]; });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***/ }),
-/* 478 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = band;
-/* harmony export (immutable) */ __webpack_exports__["b"] = point;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ordinal__ = __webpack_require__(177);
-
-
-
-function band() {
-  var scale = Object(__WEBPACK_IMPORTED_MODULE_1__ordinal__["a" /* default */])().unknown(undefined),
-      domain = scale.domain,
-      ordinalRange = scale.range,
-      range = [0, 1],
-      step,
-      bandwidth,
-      round = false,
-      paddingInner = 0,
-      paddingOuter = 0,
-      align = 0.5;
-
-  delete scale.unknown;
-
-  function rescale() {
-    var n = domain().length,
-        reverse = range[1] < range[0],
-        start = range[reverse - 0],
-        stop = range[1 - reverse];
-    step = (stop - start) / Math.max(1, n - paddingInner + paddingOuter * 2);
-    if (round) step = Math.floor(step);
-    start += (stop - start - step * (n - paddingInner)) * align;
-    bandwidth = step * (1 - paddingInner);
-    if (round) start = Math.round(start), bandwidth = Math.round(bandwidth);
-    var values = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["s" /* range */])(n).map(function(i) { return start + step * i; });
-    return ordinalRange(reverse ? values.reverse() : values);
-  }
-
-  scale.domain = function(_) {
-    return arguments.length ? (domain(_), rescale()) : domain();
-  };
-
-  scale.range = function(_) {
-    return arguments.length ? (range = [+_[0], +_[1]], rescale()) : range.slice();
-  };
-
-  scale.rangeRound = function(_) {
-    return range = [+_[0], +_[1]], round = true, rescale();
-  };
-
-  scale.bandwidth = function() {
-    return bandwidth;
-  };
-
-  scale.step = function() {
-    return step;
-  };
-
-  scale.round = function(_) {
-    return arguments.length ? (round = !!_, rescale()) : round;
-  };
-
-  scale.padding = function(_) {
-    return arguments.length ? (paddingInner = paddingOuter = Math.max(0, Math.min(1, _)), rescale()) : paddingInner;
-  };
-
-  scale.paddingInner = function(_) {
-    return arguments.length ? (paddingInner = Math.max(0, Math.min(1, _)), rescale()) : paddingInner;
-  };
-
-  scale.paddingOuter = function(_) {
-    return arguments.length ? (paddingOuter = Math.max(0, Math.min(1, _)), rescale()) : paddingOuter;
-  };
-
-  scale.align = function(_) {
-    return arguments.length ? (align = Math.max(0, Math.min(1, _)), rescale()) : align;
-  };
-
-  scale.copy = function() {
-    return band()
-        .domain(domain())
-        .range(range)
-        .round(round)
-        .paddingInner(paddingInner)
-        .paddingOuter(paddingOuter)
-        .align(align);
-  };
-
-  return rescale();
-}
-
-function pointish(scale) {
-  var copy = scale.copy;
-
-  scale.padding = scale.paddingOuter;
-  delete scale.paddingInner;
-  delete scale.paddingOuter;
-
-  scale.copy = function() {
-    return pointish(copy());
-  };
-
-  return scale;
-}
-
-function point() {
-  return pointish(band().paddingInner(1));
-}
-
-
-/***/ }),
-/* 479 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = identity;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linear__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__number__ = __webpack_require__(178);
-
-
-
-
-function identity() {
-  var domain = [0, 1];
-
-  function scale(x) {
-    return +x;
-  }
-
-  scale.invert = scale;
-
-  scale.domain = scale.range = function(_) {
-    return arguments.length ? (domain = __WEBPACK_IMPORTED_MODULE_0__array__["a" /* map */].call(_, __WEBPACK_IMPORTED_MODULE_2__number__["a" /* default */]), scale) : domain.slice();
-  };
-
-  scale.copy = function() {
-    return identity().domain(domain);
-  };
-
-  return Object(__WEBPACK_IMPORTED_MODULE_1__linear__["b" /* linearish */])(scale);
-}
-
-
-/***/ }),
-/* 480 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_format__ = __webpack_require__(27);
-
-
-
-/* harmony default export */ __webpack_exports__["a"] = (function(domain, count, specifier) {
-  var start = domain[0],
-      stop = domain[domain.length - 1],
-      step = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["A" /* tickStep */])(start, stop, count == null ? 10 : count),
-      precision;
-  specifier = Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["e" /* formatSpecifier */])(specifier == null ? ",f" : specifier);
-  switch (specifier.type) {
-    case "s": {
-      var value = Math.max(Math.abs(start), Math.abs(stop));
-      if (specifier.precision == null && !isNaN(precision = Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["g" /* precisionPrefix */])(step, value))) specifier.precision = precision;
-      return Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["d" /* formatPrefix */])(specifier, value);
-    }
-    case "":
-    case "e":
-    case "g":
-    case "p":
-    case "r": {
-      if (specifier.precision == null && !isNaN(precision = Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["h" /* precisionRound */])(step, Math.max(Math.abs(start), Math.abs(stop))))) specifier.precision = precision - (specifier.type === "e");
-      break;
-    }
-    case "f":
-    case "%": {
-      if (specifier.precision == null && !isNaN(precision = Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["f" /* precisionFixed */])(step))) specifier.precision = precision - (specifier.type === "%") * 2;
-      break;
-    }
-  }
-  return Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["a" /* format */])(specifier);
-});
-
-
-/***/ }),
-/* 481 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = log;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_format__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__constant__ = __webpack_require__(94);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nice__ = __webpack_require__(179);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__continuous__ = __webpack_require__(55);
-
-
-
-
-
-
-function deinterpolate(a, b) {
-  return (b = Math.log(b / a))
-      ? function(x) { return Math.log(x / a) / b; }
-      : Object(__WEBPACK_IMPORTED_MODULE_2__constant__["a" /* default */])(b);
-}
-
-function reinterpolate(a, b) {
-  return a < 0
-      ? function(t) { return -Math.pow(-b, t) * Math.pow(-a, 1 - t); }
-      : function(t) { return Math.pow(b, t) * Math.pow(a, 1 - t); };
-}
-
-function pow10(x) {
-  return isFinite(x) ? +("1e" + x) : x < 0 ? 0 : x;
-}
-
-function powp(base) {
-  return base === 10 ? pow10
-      : base === Math.E ? Math.exp
-      : function(x) { return Math.pow(base, x); };
-}
-
-function logp(base) {
-  return base === Math.E ? Math.log
-      : base === 10 && Math.log10
-      || base === 2 && Math.log2
-      || (base = Math.log(base), function(x) { return Math.log(x) / base; });
-}
-
-function reflect(f) {
-  return function(x) {
-    return -f(-x);
-  };
-}
-
-function log() {
-  var scale = Object(__WEBPACK_IMPORTED_MODULE_4__continuous__["b" /* default */])(deinterpolate, reinterpolate).domain([1, 10]),
-      domain = scale.domain,
-      base = 10,
-      logs = logp(10),
-      pows = powp(10);
-
-  function rescale() {
-    logs = logp(base), pows = powp(base);
-    if (domain()[0] < 0) logs = reflect(logs), pows = reflect(pows);
-    return scale;
-  }
-
-  scale.base = function(_) {
-    return arguments.length ? (base = +_, rescale()) : base;
-  };
-
-  scale.domain = function(_) {
-    return arguments.length ? (domain(_), rescale()) : domain();
-  };
-
-  scale.ticks = function(count) {
-    var d = domain(),
-        u = d[0],
-        v = d[d.length - 1],
-        r;
-
-    if (r = v < u) i = u, u = v, v = i;
-
-    var i = logs(u),
-        j = logs(v),
-        p,
-        k,
-        t,
-        n = count == null ? 10 : +count,
-        z = [];
-
-    if (!(base % 1) && j - i < n) {
-      i = Math.round(i) - 1, j = Math.round(j) + 1;
-      if (u > 0) for (; i < j; ++i) {
-        for (k = 1, p = pows(i); k < base; ++k) {
-          t = p * k;
-          if (t < u) continue;
-          if (t > v) break;
-          z.push(t);
-        }
-      } else for (; i < j; ++i) {
-        for (k = base - 1, p = pows(i); k >= 1; --k) {
-          t = p * k;
-          if (t < u) continue;
-          if (t > v) break;
-          z.push(t);
-        }
-      }
-    } else {
-      z = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["B" /* ticks */])(i, j, Math.min(j - i, n)).map(pows);
-    }
-
-    return r ? z.reverse() : z;
-  };
-
-  scale.tickFormat = function(count, specifier) {
-    if (specifier == null) specifier = base === 10 ? ".0e" : ",";
-    if (typeof specifier !== "function") specifier = Object(__WEBPACK_IMPORTED_MODULE_1_d3_format__["a" /* format */])(specifier);
-    if (count === Infinity) return specifier;
-    if (count == null) count = 10;
-    var k = Math.max(1, base * count / scale.ticks().length); // TODO fast estimate?
-    return function(d) {
-      var i = d / pows(Math.round(logs(d)));
-      if (i * base < base - 0.5) i *= base;
-      return i <= k ? specifier(d) : "";
-    };
-  };
-
-  scale.nice = function() {
-    return domain(Object(__WEBPACK_IMPORTED_MODULE_3__nice__["a" /* default */])(domain(), {
-      floor: function(x) { return pows(Math.floor(logs(x))); },
-      ceil: function(x) { return pows(Math.ceil(logs(x))); }
-    }));
-  };
-
-  scale.copy = function() {
-    return Object(__WEBPACK_IMPORTED_MODULE_4__continuous__["a" /* copy */])(scale, log().base(base));
-  };
-
-  return scale;
-}
-
-
-/***/ }),
-/* 482 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = pow;
-/* harmony export (immutable) */ __webpack_exports__["b"] = sqrt;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(94);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linear__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__continuous__ = __webpack_require__(55);
-
-
-
-
-function raise(x, exponent) {
-  return x < 0 ? -Math.pow(-x, exponent) : Math.pow(x, exponent);
-}
-
-function pow() {
-  var exponent = 1,
-      scale = Object(__WEBPACK_IMPORTED_MODULE_2__continuous__["b" /* default */])(deinterpolate, reinterpolate),
-      domain = scale.domain;
-
-  function deinterpolate(a, b) {
-    return (b = raise(b, exponent) - (a = raise(a, exponent)))
-        ? function(x) { return (raise(x, exponent) - a) / b; }
-        : Object(__WEBPACK_IMPORTED_MODULE_0__constant__["a" /* default */])(b);
-  }
-
-  function reinterpolate(a, b) {
-    b = raise(b, exponent) - (a = raise(a, exponent));
-    return function(t) { return raise(a + b * t, 1 / exponent); };
-  }
-
-  scale.exponent = function(_) {
-    return arguments.length ? (exponent = +_, domain(domain())) : exponent;
-  };
-
-  scale.copy = function() {
-    return Object(__WEBPACK_IMPORTED_MODULE_2__continuous__["a" /* copy */])(scale, pow().exponent(exponent));
-  };
-
-  return Object(__WEBPACK_IMPORTED_MODULE_1__linear__["b" /* linearish */])(scale);
-}
-
-function sqrt() {
-  return pow().exponent(0.5);
-}
-
-
-/***/ }),
-/* 483 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = quantile;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(17);
-
-
-
-function quantile() {
-  var domain = [],
-      range = [],
-      thresholds = [];
-
-  function rescale() {
-    var i = 0, n = Math.max(1, range.length);
-    thresholds = new Array(n - 1);
-    while (++i < n) thresholds[i - 1] = Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["r" /* quantile */])(domain, i / n);
-    return scale;
-  }
-
-  function scale(x) {
-    if (!isNaN(x = +x)) return range[Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["b" /* bisect */])(thresholds, x)];
-  }
-
-  scale.invertExtent = function(y) {
-    var i = range.indexOf(y);
-    return i < 0 ? [NaN, NaN] : [
-      i > 0 ? thresholds[i - 1] : domain[0],
-      i < thresholds.length ? thresholds[i] : domain[domain.length - 1]
-    ];
-  };
-
-  scale.domain = function(_) {
-    if (!arguments.length) return domain.slice();
-    domain = [];
-    for (var i = 0, n = _.length, d; i < n; ++i) if (d = _[i], d != null && !isNaN(d = +d)) domain.push(d);
-    domain.sort(__WEBPACK_IMPORTED_MODULE_0_d3_array__["a" /* ascending */]);
-    return rescale();
-  };
-
-  scale.range = function(_) {
-    return arguments.length ? (range = __WEBPACK_IMPORTED_MODULE_1__array__["b" /* slice */].call(_), rescale()) : range.slice();
-  };
-
-  scale.quantiles = function() {
-    return thresholds.slice();
-  };
-
-  scale.copy = function() {
-    return quantile()
-        .domain(domain)
-        .range(range);
-  };
-
-  return scale;
-}
-
-
-/***/ }),
-/* 484 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = quantize;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__linear__ = __webpack_require__(38);
-
-
-
-
-function quantize() {
-  var x0 = 0,
-      x1 = 1,
-      n = 1,
-      domain = [0.5],
-      range = [0, 1];
-
-  function scale(x) {
-    if (x <= x) return range[Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["b" /* bisect */])(domain, x, 0, n)];
-  }
-
-  function rescale() {
-    var i = -1;
-    domain = new Array(n);
-    while (++i < n) domain[i] = ((i + 1) * x1 - (i - n) * x0) / (n + 1);
-    return scale;
-  }
-
-  scale.domain = function(_) {
-    return arguments.length ? (x0 = +_[0], x1 = +_[1], rescale()) : [x0, x1];
-  };
-
-  scale.range = function(_) {
-    return arguments.length ? (n = (range = __WEBPACK_IMPORTED_MODULE_1__array__["b" /* slice */].call(_)).length - 1, rescale()) : range.slice();
-  };
-
-  scale.invertExtent = function(y) {
-    var i = range.indexOf(y);
-    return i < 0 ? [NaN, NaN]
-        : i < 1 ? [x0, domain[0]]
-        : i >= n ? [domain[n - 1], x1]
-        : [domain[i - 1], domain[i]];
-  };
-
-  scale.copy = function() {
-    return quantize()
-        .domain([x0, x1])
-        .range(range);
-  };
-
-  return Object(__WEBPACK_IMPORTED_MODULE_2__linear__["b" /* linearish */])(scale);
-}
-
-
-/***/ }),
-/* 485 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = threshold;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_d3_array__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(17);
-
-
-
-function threshold() {
-  var domain = [0.5],
-      range = [0, 1],
-      n = 1;
-
-  function scale(x) {
-    if (x <= x) return range[Object(__WEBPACK_IMPORTED_MODULE_0_d3_array__["b" /* bisect */])(domain, x, 0, n)];
-  }
-
-  scale.domain = function(_) {
-    return arguments.length ? (domain = __WEBPACK_IMPORTED_MODULE_1__array__["b" /* slice */].call(_), n = Math.min(domain.length, range.length - 1), scale) : domain.slice();
-  };
-
-  scale.range = function(_) {
-    return arguments.length ? (range = __WEBPACK_IMPORTED_MODULE_1__array__["b" /* slice */].call(_), n = Math.min(domain.length, range.length - 1), scale) : range.slice();
-  };
-
-  scale.invertExtent = function(y) {
-    var i = range.indexOf(y);
-    return [domain[i - 1], domain[i]];
-  };
-
-  scale.copy = function() {
-    return threshold()
-        .domain(domain)
-        .range(range);
-  };
-
-  return scale;
-}
-
-
-/***/ }),
-/* 486 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__time__ = __webpack_require__(180);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_d3_time_format__ = __webpack_require__(32);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_d3_time__ = __webpack_require__(23);
-
-
-
-
-/* harmony default export */ __webpack_exports__["a"] = (function() {
-  return Object(__WEBPACK_IMPORTED_MODULE_0__time__["a" /* calendar */])(__WEBPACK_IMPORTED_MODULE_2_d3_time__["_7" /* utcYear */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["R" /* utcMonth */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["_5" /* utcWeek */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["F" /* utcDay */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["J" /* utcHour */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["N" /* utcMinute */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["V" /* utcSecond */], __WEBPACK_IMPORTED_MODULE_2_d3_time__["L" /* utcMillisecond */], __WEBPACK_IMPORTED_MODULE_1_d3_time_format__["g" /* utcFormat */]).domain([Date.UTC(2000, 0, 1), Date.UTC(2000, 0, 2)]);
-});
-
-
-/***/ }),
-/* 487 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = sequential;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__linear__ = __webpack_require__(38);
-
-
-function sequential(interpolator) {
-  var x0 = 0,
-      x1 = 1,
-      clamp = false;
-
-  function scale(x) {
-    var t = (x - x0) / (x1 - x0);
-    return interpolator(clamp ? Math.max(0, Math.min(1, t)) : t);
-  }
-
-  scale.domain = function(_) {
-    return arguments.length ? (x0 = +_[0], x1 = +_[1], scale) : [x0, x1];
-  };
-
-  scale.clamp = function(_) {
-    return arguments.length ? (clamp = !!_, scale) : clamp;
-  };
-
-  scale.interpolator = function(_) {
-    return arguments.length ? (interpolator = _, scale) : interpolator;
-  };
-
-  scale.copy = function() {
-    return sequential(interpolator).domain([x0, x1]).clamp(clamp);
-  };
-
-  return Object(__WEBPACK_IMPORTED_MODULE_0__linear__["b" /* linearish */])(scale);
-}
-
 
 /***/ })
 /******/ ]);

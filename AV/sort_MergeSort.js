@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import {scaleLinear} from "d3-scale";
+// import {scaleLinear} from "d3-scale";
 
 
 const bodySelection = d3.select("body");
@@ -18,7 +18,7 @@ svgSelection.append("text")
   .style("font-family", "Courier")
   .text("Merge Sort: Click Below");
 
-let merge = document.getElementById("merge")
+let mergeSrt = document.getElementById("merge");
 
 
 export const generateLines = () => {
@@ -80,38 +80,32 @@ export const generateLines = () => {
   // each parallel pass. The first pass is performed at size = 2.
   function mergesort(array) {
     let sorted = [],
-        i,
-        low,
-        arrLength = array.length,
-        size = 1;
-
+        size,
+        j,
+        m = 1;
+        debugger
     // double the size each pass
-    while (size < arrLength) {
-      for (size = 1; size < arrLength; size=size * 2) {
-        for (let low = 0; low < arrLength - size; low += (size * 2)) {
-          let middle = low + size - 1;
-          let high = Math.min(low + (size*2 - 1), arrLength - 1)
-          merge(low, middle, high)
-        }
-        // if (low) sorted.push(array.slice());
+    while (m < array.length) {
+      debugger
+      size = j = 0;
+      while (size < array.length) {
+        debugger
+        j += merge(size, size += m, size += m);
+        //adding true to j increments it by 1
+        //adding false increments it by 0....after being 0 it will always be true
       }
-      // return array
-      // i = j = 0; while (i < array.length) j += merge(i, i += m, i += m);
-      // if (j) sorted.push(array.slice());
-      // else m <<= 1;
+      if (j) sorted.push(array.slice());
+      else m *= 2;
     }
 
     // Merges two adjacent sorted arrays in-place.
     function merge(start, middle, end) {
-      debugger
       middle = Math.min(array.length, middle);
       end = Math.min(array.length, end);
-      debugger
-      for (; start < middle; start++) { //size of subarray
+      for (; start < middle; start++) {
         if (array[start] > array[middle]) {
-          debugger
           let v = array[start];
-          array[start] = array[middle]; //move the one on the right to the left
+          array[start] = array[middle];
           insert(middle, end, v);
           return true;
         }
@@ -119,56 +113,17 @@ export const generateLines = () => {
       return false;
     }
 
-    // Inserts the value v into the subarray specified by start and end.
+    // Inserts the value target into the subarray specified by start and end.
     function insert(startIdx, endIdx, target) {
-      while (startIdx + 1 < endIdx && array[startIdx + 1] < target) { //while startIdx and end are at least 2
-        //while array[startIdx + 1] is less than the target valu
-        let temp = array[startIdx]; //temporary = array[startIdx]
-        array[startIdx] = array[startIdx + 1]; // array[startIdx] is the next value
-        array[startIdx + 1] = temp; // the next value is set to temporary
-        start++; //start incremented
+      while (startIdx + 1 < endIdx && array[startIdx + 1] < target) {
+        let temp = array[startIdx];
+        array[startIdx] = array[startIdx + 1];
+        array[startIdx + 1] = temp;
+        startIdx++;
       }
-      array[start] = target; //array[start] is target value once the while loop breaks
+      array[startIdx] = target;
     }
-
     return sorted;
   }
-  // function mergesort(array) {
-  //   if (array.length <= 1) return array;
-  //
-  //   let callback = (left,  right) => {
-  //     return left < right ? -1 : left > right ? 1 : 0;
-  //   };
-  //
-  //   const mid = Math.floor(array.length / 2);
-  //   const sortedLeft = mergesort(array.slice(0, mid), callback);
-  //   const sortedRight = mergesort(array.slice(mid), callback);
-  //
-  //   return merge(sortedLeft, sortedRight, callback);
-  // }
-  //
-  // function merge(left, right, callback) {
-  //   let merged = [];
-  //
-  //   while (left.length && right.length) {
-  //     switch(callback(left[0], right[0])) {
-  //       case -1:
-  //         merged.push(left.shift());
-  //         break;
-  //       case 0:
-  //         merged.push(left.shift());
-  //         break;
-  //       case 1:
-  //         merged.push(right.shift());
-  //         break;
-  //     }
-  //   }
-  //
-  //   merged = merged.concat(left);
-  //   merged = merged.concat(right);
-  //
-  //   return merged;
-  // }
-
 };
-  merge.addEventListener("click", () => generateLines());
+  mergeSrt.addEventListener("click", () => generateLines());
