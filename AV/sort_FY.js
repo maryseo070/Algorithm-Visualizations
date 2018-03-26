@@ -46,14 +46,14 @@ export const shuffle = () => {
 
     function update() {
       let pass = passes.pop();
-
+      // debugger
       l.data(pass, Number)
           .transition()
           .duration(duration)
           .attr("transform", transform);
 
       if (passes.length) {
-        debugger
+        // debugger
         setTimeout(update, duration);
       }
 

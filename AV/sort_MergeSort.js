@@ -52,6 +52,7 @@ export const generateLines = () => {
 
     function update() {
       let pass = passes.pop();
+      // debugger
 
       l.data(pass, Number)
           .transition()

@@ -23269,11 +23269,11 @@ var shuffle = exports.shuffle = function shuffle() {
 
     function update() {
       var pass = passes.pop();
-
+      // debugger
       l.data(pass, Number).transition().duration(duration).attr("transform", transform);
 
       if (passes.length) {
-        debugger;
+        // debugger
         setTimeout(update, duration);
       }
 
@@ -23361,6 +23361,7 @@ var generateLines = exports.generateLines = function generateLines() {
 
     function update() {
       var pass = passes.pop();
+      // debugger
 
       l.data(pass, Number).transition().duration(duration).attr("transform", transform);
 
