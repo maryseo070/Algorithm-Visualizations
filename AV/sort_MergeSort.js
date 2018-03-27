@@ -126,5 +126,6 @@ export const generateLines = () => {
     }
     return sorted;
   }
+
 };
   mergeSrt.addEventListener("click", () => generateLines());
