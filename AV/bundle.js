@@ -23230,116 +23230,78 @@ poisson.addEventListener("click", function () {
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.shuffle = undefined;
+
 var _d = __webpack_require__(24);
 
 var d3 = _interopRequireWildcard(_d);
 
-var _d3Scale = __webpack_require__(477);
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-// const bodySelection = d3.select("body");
-// const svgSelection = bodySelection.append("svg")
-//   .attr("width", 800)
-//   .attr("height", 50)
-//   .style("display", "inline-block")
-//   .style("padding", 50)
-//   .attr("id", "fy");
-//
-// svgSelection.append("text")
-//   .attr("x", 10)
-//   .attr("y", -10)
-//   .style("font-size", "16px")
-//   .style("font-family", "Courier")
-//   .text("Fisher-Yates Shuffle: Click Below");
+var bodySelection = d3.select("body");
+var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).style("display", "inline-block").style("padding", 50).attr("id", "fy");
+
+svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Fisher-Yates Shuffle: Click Below");
 
 var fy = document.getElementById("fy");
 
-var n = 200,
-    array = d3.shuffle(d3.range(n)),
-    actions = mergesort(array.slice()).reverse();
+var shuffle = exports.shuffle = function shuffle() {
+  var w = 800,
+      h = 50;
 
-var margin = { top: 180, right: 40, bottom: 180, left: 40 },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  var n = 300,
+      x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
+      a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
+      data = d3.range(n),
+      duration = 250;
 
-var y = d3.scale.ordinal().domain([1, 0]).rangeRoundBands([height, 0], .3);
+  var l = svgSelection.selectAll("line").data(data).enter().append("line").style("stroke", "wheat").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", h).attr("transform", transform);
+  start();
 
-var x = d3.scale.ordinal().domain(d3.range(n)).rangePoints([0, width]);
+  function start() {
+    var passes = shuff(data).reverse();
+    update();
 
-var a = d3.scale.linear().domain([0, n - 1]).range([-45, 45]);
+    function update() {
 
-var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")").append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Fisher-Yates Shuffle: Click Below");
+      var pass = passes.pop();
+      l.data(pass, Number).transition().duration(duration).attr("transform", transform);
 
-var line = svg.append("g").attr("class", "line").selectAll("line").data(array.map(function (v, i) {
-  return {
-    value: v,
-    index: i,
-    array: 0
-  };
-})).enter().append("line").attr("transform", transform).attr("y2", -y.rangeBand());
-
-var line0 = line[0],
-    line1 = new Array(n);
-
-var transition = d3.transition().duration(75).each("start", function start() {
-  var action = actions.pop();
-  switch (action.type) {
-    case "copy":
-      {
-        var i = action[0],
-            j = action[1],
-            e = line1[j] = line0[i],
-            d = e.__data__;
-        d.index = j;
-        d.array = d.array + 1 & 1;
-        transition.each(function () {
-          d3.select(e).transition().attr("transform", transform);
-        });
-        break;
-      }
-    case "swap":
-      {
-        var t = line0;
-        line0 = line1;
-        line1 = t;
-        break;
-      }
-  }
-  if (actions.length) transition = transition.transition().each("start", start);
-});
-
-function transform(d) {
-  return "translate(" + x(d.index) + "," + y(d.array) + ")rotate(" + a(d.value) + ")";
-}
-
-function mergesort(array) {
-  var actions = [],
-      n = array.length,
-      array0 = array,
-      array1 = new Array(n);
-
-  for (var m = 1; m < n; m <<= 1) {
-    for (var i = 0; i < n; i += m << 1) {
-      merge(i, Math.min(i + m, n), Math.min(i + (m << 1), n));
-    }
-    actions.push({ type: "swap" });
-    array = array0, array0 = array1, array1 = array;
-  }
-
-  function merge(left, right, end) {
-    for (var i0 = left, i1 = right, j = left; j < end; ++j) {
-      if (i0 < right && (i1 >= end || array0[i0] <= array0[i1])) {
-        array1[j] = array0[i0];
-        actions.push({ type: "copy", "0": i0++, "1": j });
-      } else {
-        array1[j] = array0[i1];
-        actions.push({ type: "copy", "0": i1++, "1": j });
+      if (passes.length) {
+        setTimeout(update, duration);
       }
     }
   }
 
-  return actions;
+  function transform(d, i) {
+    return "translate(" + x(i) + "," + h + ")rotate(" + a(d) + ")";
+  }
+
+  function shuff(array) {
+    var arrLength = array.length,
+        target,
+        i;
+    var newArr = [];
+    // var newArr = Array(array.length)
+    // While there remain elements to shuffle…
+    while (arrLength) {
+      // Pick a remaining element…
+      i = Math.floor(Math.random() * arrLength--);
+      // And swap it with the current element.
+      target = array[arrLength];
+      array[arrLength] = array[i];
+      insert(i, i, target);
+      newArr.push(array.slice());
+    }
+
+    function insert(s, end, tar) {
+      array[s] = tar;
+    }
+    return newArr;
+  }
 };
 
 fy.addEventListener("click", function () {
@@ -23385,26 +23347,21 @@ var generateLines = exports.generateLines = function generateLines() {
       data = d3.shuffle(d3.range(n)),
       duration = 250;
 
-  var l = svgSelection.selectAll("line").data(data).enter().append("line").style("stroke", "pink").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", h).attr("transform", transform);
-
+  var l = svgSelection.selectAll("line").data(data).enter().append("line").style("stroke", "black").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", h).attr("transform", transform);
   start();
 
   function start() {
     var passes = mergesort(data).reverse();
-
     update();
 
     function update() {
       var pass = passes.pop();
-      // debugger
-
       l.data(pass, Number).transition().duration(duration).attr("transform", transform);
 
       if (passes.length) {
         setTimeout(update, duration);
       }
       // d3.shuffle(data);
-      // debugger
       // setTimeout(start, duration + 4000);
     }
   }
@@ -23470,12 +23427,6 @@ var generateLines = exports.generateLines = function generateLines() {
 mergeSrt.addEventListener("click", function () {
   return generateLines();
 });
-
-/***/ }),
-/* 477 */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/maryseo/Desktop/Algorithm-Visualizations/node_modules/d3-scale/index.js'\n    at Error (native)");
 
 /***/ })
 /******/ ]);

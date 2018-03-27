@@ -35,25 +35,20 @@ export const generateLines = () => {
   let l = svgSelection.selectAll("line")
     .data(data)
     .enter().append("line")
-    .style("stroke", "pink")
+    .style("stroke", "black")
       .attr("x1", 0)
       .attr("y1", 0)
       .attr("x2", 0)
       .attr("y2", h)
       .attr("transform", transform);
-
   start();
 
   function start() {
     let passes = mergesort(data).reverse();
-
-
     update();
 
     function update() {
       let pass = passes.pop();
-      // debugger
-
       l.data(pass, Number)
           .transition()
           .duration(duration)
@@ -63,7 +58,6 @@ export const generateLines = () => {
         setTimeout(update, duration);
       }
         // d3.shuffle(data);
-        // debugger
         // setTimeout(start, duration + 4000);
 
     }
