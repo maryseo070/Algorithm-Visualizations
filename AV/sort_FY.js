@@ -32,7 +32,7 @@ export const shuffle = () => {
   let l = svgSelection.selectAll("line")
     .data(data)
     .enter().append("line")
-    .style("stroke", "wheat")
+    .style("stroke", "pink")
       .attr("x1", 0)
       .attr("y1", 0)
       .attr("x2", 0)
