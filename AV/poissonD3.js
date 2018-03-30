@@ -7,7 +7,7 @@ const svgSelection = bodySelection.append("svg")
   .attr("width", width)
   .attr("height", height)
   .attr("id", "poisson")
-  .style("padding", 50);
+  .style("padding", 100);
 
 svgSelection.append("text")
         .attr("x", 160)
