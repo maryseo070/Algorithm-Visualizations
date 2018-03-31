@@ -7,11 +7,11 @@ const svgSelection = bodySelection.append("svg")
   .attr("width", width)
   .attr("height", height)
   .attr("id", "poisson")
-  .style("padding", 100);
+  .style("padding", 50);
 
 svgSelection.append("text")
         .attr("x", 160)
-        .attr("y", -15)
+        .attr("y", -10)
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("font-family", "Courier")

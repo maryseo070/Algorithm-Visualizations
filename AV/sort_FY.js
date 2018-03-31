@@ -15,7 +15,7 @@ svgSelection.append("text")
   .style("font-family", "Courier")
   .text("Fisher-Yates Shuffle: Click Below");
 
-let fy = document.getElementById("fy")
+let fy = document.getElementById("fy");
 
 
 
@@ -64,7 +64,7 @@ export const shuffle = () => {
 
   function shuff(array) {
     var arrLength = array.length, target, i;
-    let newArr = []
+    let newArr = [];
     // var newArr = Array(array.length)
     // While there remain elements to shuffle…
     while (arrLength) {
@@ -73,12 +73,12 @@ export const shuffle = () => {
       // And swap it with the current element.
       target = array[arrLength];
       array[arrLength] = array[i];
-      insert(i, i, target)
-      newArr.push(array.slice())
+      insert(i, i, target);
+      newArr.push(array.slice());
     }
 
     function insert(s, end, tar) {
-      array[s] = tar
+      array[s] = tar;
     }
     return newArr;
   }
