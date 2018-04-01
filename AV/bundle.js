@@ -23492,11 +23492,12 @@ var sort = exports.sort = function sort() {
     var todos = [];
 
     function partition(left, right, pivot) {
-      var v = array[pivot];
+      var target = array[pivot];
       rotate(pivot, --right);
       for (var i = left; i < right; ++i) {
-        if (array[i] <= v) rotate(i, left++);
-      }rotate(left, right);
+        if (array[i] <= target) rotate(i, left++);
+      }
+      rotate(left, right);
       return left;
     }
 

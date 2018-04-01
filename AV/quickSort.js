@@ -74,9 +74,11 @@ export const sort = () => {
     let todos = [];
 
     function partition(left, right, pivot) {
-      var v = array[pivot];
+      let target = array[pivot];
       rotate(pivot, --right);
-      for (var i = left; i < right; ++i) if (array[i] <= v) rotate(i, left++);
+      for (let i = left; i < right; ++i) {
+        if (array[i] <= target) rotate(i, left++);
+      }
       rotate(left, right);
       return left;
     }
