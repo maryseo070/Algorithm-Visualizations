@@ -35,10 +35,9 @@
 //   return merged;
 // }
 
-
 var n = 200,
     array = d3.shuffle(d3.range(n)),
-    actions = quicksort(array.slice()).reverse();
+    swaps = quicksort(array.slice()).reverse();
 
 var margin = {top: 230, right: 40, bottom: 230, left: 40},
     width = 960 - margin.left - margin.right,
@@ -69,29 +68,15 @@ var line = svg.append("g")
 var transition = d3.transition()
     .duration(150)
     .each("start", function start() {
-      var action = actions.pop();
-      switch (action.type) {
-        case "swap": {
-          var i = action[0],
-              j = action[1],
-              li = line[0][i],
-              lj = line[0][j];
-          line[0][i] = lj;
-          line[0][j] = li;
-          transition.each(function() { line.transition().attr("transform", transform); });
-          break;
-        }
-        case "partition": {
-          line.attr("class", function(d, i) {
-            return i === action.pivot ? "line--pivot"
-                : action.left <= i && i < action.right ? null
-                : "line--inactive";
-          });
-          break;
-        }
-      }
-      if (actions.length) transition = transition.transition().each("start", start);
-      else transition.each("end", function() { line.attr("class", null); });
+      var swap = swaps.pop(),
+          i = swap[0],
+          j = swap[1],
+          li = line[0][i],
+          lj = line[0][j];
+      line[0][i] = lj;
+      line[0][j] = li;
+      transition.each(function() { line.transition().attr("transform", transform); });
+      if (swaps.length) transition = transition.transition().each("start", start);
     });
 
 function transform(d, i) {
@@ -99,7 +84,7 @@ function transform(d, i) {
 }
 
 function quicksort(array) {
-  var actions = [];
+  var swaps = [];
 
   function partition(left, right, pivot) {
     var v = array[pivot];
@@ -114,19 +99,17 @@ function quicksort(array) {
     var t = array[i];
     array[i] = array[j];
     array[j] = t;
-    actions.push({type: "swap", "0": i, "1": j});
+    swaps.push([i, j]);
   }
 
   function recurse(left, right) {
     if (left < right - 1) {
-      var pivot = (left + right) >> 1;
-      actions.push({type: "partition", "left": left, "pivot": pivot, "right": right});
-      pivot = partition(left, right, pivot);
+      var pivot = partition(left, right, (left + right) >> 1);
       recurse(left, pivot);
       recurse(pivot + 1, right);
     }
   }
 
   recurse(0, array.length);
-  return actions;
+  return swaps;
 }
