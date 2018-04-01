@@ -23454,17 +23454,19 @@ svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16p
 var quicksort = document.getElementById("quicksort");
 
 var sort = exports.sort = function sort() {
-  var n = 30,
+  debugger;
+  var n = 100,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),
       x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
       a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
-      duration = 100;
+      duration = 150;
   debugger;
 
   var line = svgSelection.append("g").attr("class", "line").selectAll("line").data(data).enter().append("line").attr("transform", transform).attr("y2", -height).style("stroke", "purple");
 
   var transition = d3.transition().duration(duration).on("start", function start() {
+    debugger;
     var action = actions.pop();
     var mid = action[0],
         end = action[1],
@@ -23477,6 +23479,7 @@ var sort = exports.sort = function sort() {
     });
 
     if (actions.length) {
+      debugger;
       transition = transition.transition().on("start", start);
     }
   });
@@ -23489,15 +23492,12 @@ var sort = exports.sort = function sort() {
     var todos = [];
 
     function partition(left, right, pivot) {
-      var midPt = array[pivot];
+      var v = array[pivot];
       rotate(pivot, --right);
       for (var i = left; i < right; ++i) {
-        if (array[i] <= midPt) {
-          rotate(i, left++);
-        }
-        rotate(left, right);
-        return left;
-      }
+        if (array[i] <= v) rotate(i, left++);
+      }rotate(left, right);
+      return left;
     }
 
     function rotate(left, right) {
@@ -23505,24 +23505,18 @@ var sort = exports.sort = function sort() {
       var target = array[left];
       array[left] = array[right];
       array[right] = target;
-      // todos.push({type: "rotate", "0": left, "1": right});
       todos.push([left, right]);
     }
 
     function recursiveCall(left, right) {
       if (left < right - 1) {
         var pivot = partition(left, right, left + right >> 1);
-        // todos.push({type: "partition", "left": left, "pivot": pivot, "right": right})
-        // pivot = partition(left, right, pivot);
         recursiveCall(left, pivot);
         recursiveCall(pivot + 1, right);
       }
     }
-    debugger;
-    // while (array !== quickSort(array)) {
     recursiveCall(0, array.length);
     return todos;
-    // }
   }
 };
 

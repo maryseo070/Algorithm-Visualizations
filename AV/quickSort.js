@@ -28,13 +28,14 @@ let quicksort = document.getElementById("quicksort");
 
 
 export const sort = () => {
-  let n = 30,
+  debugger
+  let n = 100,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),
       x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
       a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
-      duration = 100;
-    debugger
+      duration = 150;
+  debugger
 
   let line = svgSelection.append("g")
     .attr("class", "line")
@@ -48,6 +49,7 @@ export const sort = () => {
   let transition = d3.transition()
     .duration(duration)
     .on("start", function start() {
+      debugger
       let action = actions.pop();
           let mid = action[0],
               end = action[1],
@@ -58,6 +60,7 @@ export const sort = () => {
           transition.each(function() { line.transition().attr("transform", transform); });
 
       if (actions.length) {
+        debugger
         transition = transition.transition().on("start", start);
       }
 
@@ -71,15 +74,11 @@ export const sort = () => {
     let todos = [];
 
     function partition(left, right, pivot) {
-      let midPt = array[pivot];
+      var v = array[pivot];
       rotate(pivot, --right);
-      for (let i = left; i < right; ++i) {
-        if (array[i] <= midPt) {
-          rotate(i, left++);
-        }
-        rotate(left, right);
-        return left;
-      }
+      for (var i = left; i < right; ++i) if (array[i] <= v) rotate(i, left++);
+      rotate(left, right);
+      return left;
     }
 
     function rotate(left, right) {
@@ -87,24 +86,18 @@ export const sort = () => {
       let target = array[left];
       array[left] = array[right];
       array[right] = target;
-      // todos.push({type: "rotate", "0": left, "1": right});
       todos.push([left, right])
     }
 
     function recursiveCall(left, right) {
       if (left < right - 1) {
         let pivot = partition(left, right, (left + right) >> 1);
-        // todos.push({type: "partition", "left": left, "pivot": pivot, "right": right})
-        // pivot = partition(left, right, pivot);
         recursiveCall(left, pivot);
         recursiveCall(pivot + 1, right);
       }
     }
-    debugger
-    // while (array !== quickSort(array)) {
-      recursiveCall(0, array.length);
-      return todos;
-    // }
+    recursiveCall(0, array.length);
+    return todos;
   }
 
 };
