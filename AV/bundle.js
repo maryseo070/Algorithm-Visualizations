@@ -23445,43 +23445,46 @@ var width = 800;
 var height = 50;
 
 var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).style("display", "inline-block").style("padding", 50).attr("id", "quicksort");
+var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).style("display", "inline-block").style("padding", 50).attr("id", "quicksort").append("g");
+// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
 svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Quick Sort: Click Below");
 
 var quicksort = document.getElementById("quicksort");
 
 var sort = exports.sort = function sort() {
-  var n = 300,
+  var n = 200,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),
       x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
       a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
-      duration = 250;
+      duration = 50;
+  // debugger
 
-  var line = svgSelection.append("g").attr("class", "line").selectAll("line").data(data).enter().append("line").attr("transform", transform).attr("y2", -height).style("stroke", "pink");
+  var line = svgSelection.append("g").attr("class", "line").selectAll("line").data(data).enter().append("line").attr("transform", transform).attr("y2", -height).style("stroke", "purple");
 
   var transition = d3.transition().duration(duration).on("start", function start() {
     var action = actions.pop();
     switch (action.type) {
       case "rotate":
         {
-          debugger;
-          var current = action[0],
-              next = action[1],
-              currentLi = Array(line)[0][current],
-              nextLi = Array(line)[1][next];
-          line[0][current] = nextLi;
-          line[1][next] = currentLi;
-          transition.on(function () {
+          var mid = action[0],
+              end = action[1],
+              midLi = line._groups[0][mid],
+              endLi = line._groups[0][end];
+          line._groups[0][mid] = endLi;
+          line._groups[0][end] = midLi;
+          transition.each(function () {
             line.transition().attr("transform", transform);
           });
           break;
         }
       case "partition":
         {
+          // debugger
           line.attr("class", function (d, i) {
-            return i === action.pivot ? "line--pivot" : action.left <= i && action.right ? null : "line--inactive";
+            return i === action.pivot ? "line--pivot" : action.left <= i && i < action.right ? null : "line--inactive";
           });
           break;
         }
@@ -23501,6 +23504,7 @@ var sort = exports.sort = function sort() {
 
   function quickSort(array) {
     var todos = [];
+
     function partition(left, right, pivot) {
       var midPt = array[pivot];
       rotate(pivot, --right);

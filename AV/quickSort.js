@@ -11,7 +11,10 @@ const svgSelection = bodySelection.append("svg")
     .attr("height", height)
     .style("display", "inline-block")
     .style("padding", 50)
-    .attr("id", "quicksort");
+    .attr("id", "quicksort")
+    .append("g")
+    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
 svgSelection.append("text")
     .attr("x", 10)
@@ -25,12 +28,13 @@ let quicksort = document.getElementById("quicksort");
 
 
 export const sort = () => {
-  let n = 300,
-    data = d3.shuffle(d3.range(n)),
-    actions = quickSort(data.slice()).reverse(),
-    x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
-    a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
-    duration = 250;
+  let n = 200,
+      data = d3.shuffle(d3.range(n)),
+      actions = quickSort(data.slice()).reverse(),
+      x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
+      a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
+      duration = 50;
+    // debugger
 
   let line = svgSelection.append("g")
     .attr("class", "line")
@@ -39,7 +43,7 @@ export const sort = () => {
     .enter().append("line")
     .attr("transform", transform)
     .attr("y2", -height)
-    .style("stroke", "pink");
+    .style("stroke", "purple");
 
   let transition = d3.transition()
     .duration(duration)
@@ -47,22 +51,20 @@ export const sort = () => {
       let action = actions.pop();
       switch(action.type) {
         case "rotate": {
-          debugger
-          let current = action[0],
-              next = action[1],
-              currentLi = Array(line)[0][current],
-              nextLi = Array(line)[1][next];
-          line[0][current] = nextLi;
-          line[1][next] = currentLi;
-          transition.on(function () {
-            line.transition().attr("transform", transform);
-          });
+          let mid = action[0],
+              end = action[1],
+              midLi = (line._groups)[0][mid],
+              endLi = (line._groups)[0][end];
+          line._groups[0][mid] = endLi;
+          line._groups[0][end] = midLi;
+          transition.each(function() { line.transition().attr("transform", transform); });
           break;
         }
         case "partition": {
+          // debugger
           line.attr("class", function(d, i) {
             return i === action.pivot ? "line--pivot"
-            : action.left <= i && action.right? null
+            : action.left <= i && i < action.right ? null
             : "line--inactive";
           });
           break;
@@ -82,6 +84,7 @@ export const sort = () => {
 
   function quickSort(array) {
     let todos = [];
+
     function partition(left, right, pivot) {
       let midPt = array[pivot];
       rotate(pivot, --right);
