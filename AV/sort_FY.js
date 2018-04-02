@@ -23,7 +23,7 @@ export const shuffle = () => {
   let w = 800,
       h = 50;
 
-  let n = 300,
+  let n = 150,
       x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
       a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
       data = (d3.range(n)),

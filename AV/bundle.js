@@ -23246,7 +23246,7 @@ var shuffle = exports.shuffle = function shuffle() {
   var w = 800,
       h = 50;
 
-  var n = 300,
+  var n = 150,
       x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
       a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
       data = d3.range(n),
@@ -23335,7 +23335,7 @@ var generateLines = exports.generateLines = function generateLines() {
   var w = 800,
       h = 50;
 
-  var n = 300,
+  var n = 150,
       x = d3.scaleLinear().domain([0, n]).range([h, w - h]),
       a = d3.scaleLinear().domain([0, n - 1]).range([90 + 60, 270 - 60]),
       data = d3.shuffle(d3.range(n)),
@@ -23454,19 +23454,16 @@ svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16p
 var quicksort = document.getElementById("quicksort");
 
 var sort = exports.sort = function sort() {
-  debugger;
   var n = 100,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),
       x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
       a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
       duration = 150;
-  debugger;
 
   var line = svgSelection.append("g").attr("class", "line").selectAll("line").data(data).enter().append("line").attr("transform", transform).attr("y2", -height).style("stroke", "purple");
 
   var transition = d3.transition().duration(duration).on("start", function start() {
-    debugger;
     var action = actions.pop();
     var mid = action[0],
         end = action[1],
@@ -23479,7 +23476,6 @@ var sort = exports.sort = function sort() {
     });
 
     if (actions.length) {
-      debugger;
       transition = transition.transition().on("start", start);
     }
   });

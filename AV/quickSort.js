@@ -28,14 +28,12 @@ let quicksort = document.getElementById("quicksort");
 
 
 export const sort = () => {
-  debugger
   let n = 100,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),
       x = d3.scaleLinear().domain([0, n]).range([height, width - height]),
       a = d3.scaleLinear().domain([0, n - 1]).range([-45, 45]),
       duration = 150;
-  debugger
 
   let line = svgSelection.append("g")
     .attr("class", "line")
@@ -49,7 +47,6 @@ export const sort = () => {
   let transition = d3.transition()
     .duration(duration)
     .on("start", function start() {
-      debugger
       let action = actions.pop();
           let mid = action[0],
               end = action[1],
@@ -60,7 +57,6 @@ export const sort = () => {
           transition.each(function() { line.transition().attr("transform", transform); });
 
       if (actions.length) {
-        debugger
         transition = transition.transition().on("start", start);
       }
 
