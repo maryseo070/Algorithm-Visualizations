@@ -24,7 +24,10 @@ svg2.append("text")
 
 let mergeSrt = document.getElementById("merge");
 
-
+const play = () => {
+  d3.selectAll("#merge > *").remove();
+  generateLines();
+}
 
 
 export const generateLines = () => {
@@ -129,4 +132,4 @@ export const generateLines = () => {
   }
 
 };
-  mergeSrt.addEventListener("click", () => generateLines());
+  mergeSrt.addEventListener("click", () => play());

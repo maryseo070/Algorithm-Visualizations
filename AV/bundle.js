@@ -23344,6 +23344,11 @@ svg2.append("text").attr("x", 10).attr("y", 10).style("font-size", "16px").style
 
 var mergeSrt = document.getElementById("merge");
 
+var play = function play() {
+  d3.selectAll("#merge > *").remove();
+  generateLines();
+};
+
 var generateLines = exports.generateLines = function generateLines() {
 
   // l.exit().remove();
@@ -23434,7 +23439,7 @@ var generateLines = exports.generateLines = function generateLines() {
   }
 };
 mergeSrt.addEventListener("click", function () {
-  return generateLines();
+  return play();
 });
 
 /***/ }),
