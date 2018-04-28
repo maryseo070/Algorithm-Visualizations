@@ -8,7 +8,7 @@ const svgSelection = bodySelection.append("svg")
   .attr("height", 50)
   .attr("id", "merge")
   .style("display", "inline-block")
-  .style("padding", 50);
+  .style("padding", 25);
 
 
 svgSelection.append("text")
@@ -23,6 +23,7 @@ let mergeSrt = document.getElementById("merge");
 
 export const generateLines = () => {
 
+  // l.exit().remove();
   let w = 800,
       h = 50;
 

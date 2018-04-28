@@ -6,28 +6,34 @@ let height = 50;
 
 
 const bodySelection = d3.select("body");
+
+const svg2 = bodySelection.append("svg")
+.attr('width', 800)
+.attr("height", 50)
+.attr("id", "textbox");
+
 const svgSelection = bodySelection.append("svg")
     .attr("width", width)
     .attr("height", height)
     .style("display", "inline-block")
-    .style("padding", 50)
     .attr("id", "quicksort")
-    .append("g")
-    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .append("g");
 
 
-svgSelection.append("text")
+svg2.append("text")
     .attr("x", 10)
-    .attr("y", -10)
+    .attr("y", 10)
     .style("font-size", "16px")
     .style("font-family", "Courier")
     .text("Quick Sort: Click Below");
 
 let quicksort = document.getElementById("quicksort");
 
+// d3.selectAll("#quicksort > *").remove();
 
 
 export const sort = () => {
+
   let n = 100,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),

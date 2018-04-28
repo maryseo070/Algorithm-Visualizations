@@ -1,27 +1,33 @@
 import * as d3 from 'd3';
 
-let width = 800
-let height = 100
+let width = 800;
+let height = 100;
 const bodySelection = d3.select("body");
+
+const svg2 = bodySelection.append("svg")
+.attr('width', 800)
+.attr("height", 50)
+.attr("id", "textbox");
+
 const svgSelection = bodySelection.append("svg")
   .attr("width", width)
   .attr("height", height)
   .attr("id", "poisson")
-  .style("padding", 50);
 
-svgSelection.append("text")
-        .attr("x", 160)
-        .attr("y", -10)
+
+svg2.append("text")
+        .attr("x", 163)
+        .attr("y", 20)
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("font-family", "Courier")
         .style("margin", "auto")
         .text("Poisson Disc Sampling: Click Below");
 
-  let poisson = document.getElementById("poisson")
+  let poisson = document.getElementById("poisson");
 
 export const mc = () => {
-
+  d3.selectAll("#poisson > *").remove();
   var start = draw();
 
   d3.timer(function () {
@@ -35,7 +41,7 @@ export const mc = () => {
       .attr("r", 1)
       // .transition()
       // .attr("r", 2)
-      .style("fill", "black")
+      .style("fill", "black");
     }
     // setTimeout(() => generateDots.stop(), 3000);
 

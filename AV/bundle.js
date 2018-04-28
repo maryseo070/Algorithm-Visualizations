@@ -23064,6 +23064,8 @@ function setup() {
 
   var canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   function randomDots() {
     var generateDots = d3.timer(function () {
       for (var i = 0; i < 5; i++) {
@@ -23105,14 +23107,17 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var width = 800;
 var height = 100;
 var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).attr("id", "poisson").style("padding", 50);
 
-svgSelection.append("text").attr("x", 160).attr("y", -10).attr("text-anchor", "middle").style("font-size", "16px").style("font-family", "Courier").style("margin", "auto").text("Poisson Disc Sampling: Click Below");
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 50).attr("id", "textbox");
+
+var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).attr("id", "poisson");
+
+svg2.append("text").attr("x", 163).attr("y", 20).attr("text-anchor", "middle").style("font-size", "16px").style("font-family", "Courier").style("margin", "auto").text("Poisson Disc Sampling: Click Below");
 
 var poisson = document.getElementById("poisson");
 
 var mc = exports.mc = function mc() {
-
+  d3.selectAll("#poisson > *").remove();
   var start = draw();
 
   d3.timer(function () {
@@ -23236,13 +23241,20 @@ var d3 = _interopRequireWildcard(_d);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).style("display", "inline-block").style("padding", 50).attr("id", "fy");
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 25).attr("id", "textbox");
+var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).style("display", "inline-block").attr("id", "fy");
 
-svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Fisher-Yates Shuffle: Click Below");
+svg2.append("text").attr("x", 10).attr("y", 10).style("font-size", "16px").style("font-family", "Courier").text("Fisher-Yates Shuffle: Click Below");
 
 var fy = document.getElementById("fy");
 
+var play = function play() {
+  d3.selectAll("#fy > *").remove();
+  shuffle();
+};
+
 var shuffle = exports.shuffle = function shuffle() {
+
   var w = 800,
       h = 50;
 
@@ -23299,7 +23311,7 @@ var shuffle = exports.shuffle = function shuffle() {
 };
 
 fy.addEventListener("click", function () {
-  return shuffle();
+  return play();
 });
 
 /***/ }),
@@ -23324,7 +23336,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 
 var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).attr("id", "merge").style("display", "inline-block").style("padding", 50);
+var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).attr("id", "merge").style("display", "inline-block").style("padding", 25);
 
 svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Merge Sort: Click Below");
 
@@ -23332,6 +23344,7 @@ var mergeSrt = document.getElementById("merge");
 
 var generateLines = exports.generateLines = function generateLines() {
 
+  // l.exit().remove();
   var w = 800,
       h = 50;
 
@@ -23445,15 +23458,20 @@ var width = 800;
 var height = 50;
 
 var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).style("display", "inline-block").style("padding", 50).attr("id", "quicksort").append("g");
-// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 50).attr("id", "textbox");
 
-svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Quick Sort: Click Below");
+var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).style("display", "inline-block").attr("id", "quicksort").append("g");
+
+svg2.append("text").attr("x", 10).attr("y", 10).style("font-size", "16px").style("font-family", "Courier").text("Quick Sort: Click Below");
 
 var quicksort = document.getElementById("quicksort");
 
+// d3.selectAll("#quicksort > *").remove();
+
+
 var sort = exports.sort = function sort() {
+
   var n = 100,
       data = d3.shuffle(d3.range(n)),
       actions = quickSort(data.slice()).reverse(),

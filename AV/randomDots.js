@@ -11,6 +11,7 @@ function setup() {
 
   var canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 
   function randomDots() {
