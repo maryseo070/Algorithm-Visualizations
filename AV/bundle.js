@@ -23466,16 +23466,20 @@ var height = 50;
 
 var bodySelection = d3.select("body");
 
-var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 50).attr("id", "textbox");
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 25).attr("id", "textbox").style("padding", 10);
 
-var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).style("display", "inline-block").attr("id", "quicksort").append("g");
+var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).style("display", "inline-block").attr("id", "quicksort");
+// .append("g");
+
 
 svg2.append("text").attr("x", 10).attr("y", 10).style("font-size", "16px").style("font-family", "Courier").text("Quick Sort: Click Below");
 
 var quicksort = document.getElementById("quicksort");
 
-// d3.selectAll("#quicksort > *").remove();
-
+var play = function play() {
+  d3.selectAll("#quicksort > *").remove();
+  sort();
+};
 
 var sort = exports.sort = function sort() {
 
@@ -23543,7 +23547,7 @@ var sort = exports.sort = function sort() {
 };
 
 quicksort.addEventListener("click", function () {
-  return sort();
+  return play();
 });
 
 /***/ })

@@ -4,20 +4,20 @@ let margin = {top: 50, right: 50, bottom: 230, left: 40};
 let width = 800;
 let height = 50;
 
-
 const bodySelection = d3.select("body");
 
 const svg2 = bodySelection.append("svg")
 .attr('width', 800)
-.attr("height", 50)
-.attr("id", "textbox");
+.attr("height", 25)
+.attr("id", "textbox")
+.style("padding", 10);
 
 const svgSelection = bodySelection.append("svg")
     .attr("width", width)
     .attr("height", height)
     .style("display", "inline-block")
     .attr("id", "quicksort")
-    .append("g");
+    // .append("g");
 
 
 svg2.append("text")
@@ -29,7 +29,10 @@ svg2.append("text")
 
 let quicksort = document.getElementById("quicksort");
 
-// d3.selectAll("#quicksort > *").remove();
+const play = () => {
+  d3.selectAll("#quicksort > *").remove();
+  sort();
+};
 
 
 export const sort = () => {
@@ -90,7 +93,7 @@ export const sort = () => {
       let target = array[left];
       array[left] = array[right];
       array[right] = target;
-      todos.push([left, right])
+      todos.push([left, right]);
     }
 
     function recursiveCall(left, right) {
@@ -106,4 +109,4 @@ export const sort = () => {
 
 };
 
-quicksort.addEventListener("click", () => sort());
+quicksort.addEventListener("click", () => play());

@@ -23,9 +23,6 @@ svg2.append("text")
 
 let fy = document.getElementById("fy");
 
-
-
-
 const play = () => {
   d3.selectAll("#fy > *").remove();
   shuffle();
