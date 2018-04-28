@@ -12,7 +12,7 @@ const svg2 = bodySelection.append("svg")
 const svgSelection = bodySelection.append("svg")
   .attr("width", width)
   .attr("height", height)
-  .attr("id", "poisson")
+  .attr("id", "poisson");
 
 
 svg2.append("text")

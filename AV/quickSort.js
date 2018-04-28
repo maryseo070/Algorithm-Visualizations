@@ -16,7 +16,7 @@ const svgSelection = bodySelection.append("svg")
     .attr("width", width)
     .attr("height", height)
     .style("display", "inline-block")
-    .attr("id", "quicksort")
+    .attr("id", "quicksort");
     // .append("g");
 
 

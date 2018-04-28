@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 // document.addEventListener("click", setup);
-  let canv = document.getElementById("myCanvas")
+  let canv = document.getElementById("myCanvas");
   canv.onclick = () => {setup();};
 
 function setup() {
