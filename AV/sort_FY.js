@@ -4,7 +4,9 @@ const bodySelection = d3.select("body");
 const svg2 = bodySelection.append("svg")
 .attr('width', 800)
 .attr("height", 25)
-.attr("id", "textbox");
+.attr("id", "textbox")
+.style("padding", 10);
+
 const svgSelection = bodySelection.append("svg")
   .attr("width", 800)
   .attr("height", 50)

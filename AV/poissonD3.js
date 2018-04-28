@@ -6,7 +6,7 @@ const bodySelection = d3.select("body");
 
 const svg2 = bodySelection.append("svg")
 .attr('width', 800)
-.attr("height", 50)
+.attr("height", 25)
 .attr("id", "textbox");
 
 const svgSelection = bodySelection.append("svg")

@@ -3,22 +3,28 @@ import * as d3 from "d3";
 
 
 const bodySelection = d3.select("body");
+const svg2 = bodySelection.append("svg")
+.attr('width', 800)
+.attr("height", 25)
+.attr("id", "textbox")
+.style("padding", 10);
 const svgSelection = bodySelection.append("svg")
   .attr("width", 800)
   .attr("height", 50)
   .attr("id", "merge")
   .style("display", "inline-block")
-  .style("padding", 25);
 
 
-svgSelection.append("text")
+svg2.append("text")
   .attr("x", 10)
-  .attr("y", -10)
+  .attr("y", 10)
   .style("font-size", "16px")
   .style("font-family", "Courier")
   .text("Merge Sort: Click Below");
 
 let mergeSrt = document.getElementById("merge");
+
+
 
 
 export const generateLines = () => {

@@ -23108,7 +23108,7 @@ var width = 800;
 var height = 100;
 var bodySelection = d3.select("body");
 
-var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 50).attr("id", "textbox");
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 25).attr("id", "textbox");
 
 var svgSelection = bodySelection.append("svg").attr("width", width).attr("height", height).attr("id", "poisson");
 
@@ -23241,7 +23241,8 @@ var d3 = _interopRequireWildcard(_d);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var bodySelection = d3.select("body");
-var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 25).attr("id", "textbox");
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 25).attr("id", "textbox").style("padding", 10);
+
 var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).style("display", "inline-block").attr("id", "fy");
 
 svg2.append("text").attr("x", 10).attr("y", 10).style("font-size", "16px").style("font-family", "Courier").text("Fisher-Yates Shuffle: Click Below");
@@ -23336,9 +23337,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 
 var bodySelection = d3.select("body");
-var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).attr("id", "merge").style("display", "inline-block").style("padding", 25);
+var svg2 = bodySelection.append("svg").attr('width', 800).attr("height", 25).attr("id", "textbox").style("padding", 10);
+var svgSelection = bodySelection.append("svg").attr("width", 800).attr("height", 50).attr("id", "merge").style("display", "inline-block");
 
-svgSelection.append("text").attr("x", 10).attr("y", -10).style("font-size", "16px").style("font-family", "Courier").text("Merge Sort: Click Below");
+svg2.append("text").attr("x", 10).attr("y", 10).style("font-size", "16px").style("font-family", "Courier").text("Merge Sort: Click Below");
 
 var mergeSrt = document.getElementById("merge");
 
