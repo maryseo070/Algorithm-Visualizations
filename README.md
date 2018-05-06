@@ -6,7 +6,7 @@ Live: http://maryseo.net/Algorithm-Visualizations/
   - Uniform Random Sampling: results in severe under and oversampling where many samples are densely overpacked or overlapping.
 - Fisher–Yates Shuffle, Quick Sort, and Merge Sort
   - The Fisher-Yates Shuffle algorithm runs in linear time and uses constant space. It splits an array into two parts, the right (shuffled) and left (unshuffled) sides. Step by step, the algorithm randomly picks an element from the left and moves it to the right.
-  - Quick sort chooses a pivot element (the middle element) and partitions the array into two subarrays: one containing the elements that appear before the partition and another with elements that appear after. It then recursively sorts the "before" and "after" arrays.
+  - Quick sort chooses a pivot element and partitions the array into two subarrays: one containing the elements that are of value less than the pivot and another with elements of value that are greater than the pivot. It then recursively sorts the left (less than) and right (greater than) arrays.
   - Merge Sort: takes in an array of shuffled arrays and bottom-up merges elements, sorts them, and then merges again.
 
 
@@ -14,7 +14,7 @@ Live: http://maryseo.net/Algorithm-Visualizations/
 1. Poisson-Disc Algorithm
 2. Fisher-Yates Shuffling Algorithm
 3. Merge Sort, Random Sampling
-4. Quick Sort 
+4. Quick Sort
 4. Using D3 to animate changes in candidates
 
 ![](./aA.png)
